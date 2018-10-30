@@ -8,8 +8,6 @@ This project uses Docker and Docker compose for development. To build the images
 docker-compose build
 ```
 
-??? -> "mix deps.get"
-
 The first time you will need to create the DB:
 
 ```

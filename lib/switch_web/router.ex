@@ -7,5 +7,6 @@ defmodule SwitchWeb.Router do
 
   scope "/api", SwitchWeb do
     pipe_through :api
+    resources "/feature-toggles", FeatureToggleController
   end
 end
