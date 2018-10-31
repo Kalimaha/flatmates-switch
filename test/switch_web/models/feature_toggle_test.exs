@@ -1,7 +1,7 @@
-defmodule Switch.FeatureToggleTest do
+defmodule SwitchWeb.FeatureToggleTest do
   use Switch.DataCase
 
-  alias Switch.FeatureToggle
+  alias SwitchWeb.FeatureToggle
 
   @valid_attributes %{
     :external_id => "spam_and_eggs",

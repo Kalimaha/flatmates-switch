@@ -1,7 +1,7 @@
-defmodule Switch.FeatureToggle do
+defmodule SwitchWeb.FeatureToggle do
   use Ecto.Schema
   import Ecto.Changeset
-  alias Switch.FeatureToggle
+  alias SwitchWeb.FeatureToggle
 
   schema "feature_toggles" do
     field :external_id, :string
