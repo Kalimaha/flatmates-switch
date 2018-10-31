@@ -3,6 +3,7 @@ defmodule SwitchWeb.FeatureToggle do
   import Ecto.Changeset
   alias SwitchWeb.FeatureToggle
 
+  @derive {Poison.Encoder, only: [:external_id, :env, :status]}
   schema "feature_toggles" do
     field :external_id, :string
     field :env,         :string
