@@ -26,4 +26,11 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
 
     assert response == expected
   end
+
+  test "inserts a new record in the DB", %{conn: conn} do
+    feature_toggle = %{ external_id: "spam", status: "active", env: "prod" }
+    conn |> post(feature_toggle_path(conn, :create, feature_toggle)) |> json_response(201)
+
+    assert (length FeatureToggleRepository.list) == 1
+  end
 end

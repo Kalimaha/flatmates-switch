@@ -21,4 +21,15 @@ defmodule SwitchWeb.FeatureToggleRepositoryTest do
 
     refute record.id == nil
   end
+
+  test "returns an empty array when there are no records in the DB" do
+    assert (length FeatureToggleRepository.list) == 0
+  end
+
+  test "returns all the available records in the DB" do
+    FeatureToggle.changeset(%FeatureToggle{}, @feature_toggle)
+    |> Repo.insert
+
+    assert (length FeatureToggleRepository.list) == 1
+  end
 end
