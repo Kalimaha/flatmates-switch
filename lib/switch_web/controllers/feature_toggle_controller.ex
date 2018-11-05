@@ -18,4 +18,12 @@ defmodule SwitchWeb.FeatureToggleController do
     |> put_status(:created)
     |> json(feature_toggle)
   end
+
+  def delete(conn, params) do
+    FeatureToggleRepository.delete(params["id"])
+
+    conn
+    |> put_status(:ok)
+    |> json(:ok)
+  end
 end

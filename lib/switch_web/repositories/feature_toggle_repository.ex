@@ -10,4 +10,9 @@ defmodule SwitchWeb.FeatureToggleRepository do
   def list do
     Repo.all(FeatureToggle)
   end
+
+  def delete(id) do
+    Repo.get(FeatureToggle, id)
+    |> Repo.delete
+  end
 end
