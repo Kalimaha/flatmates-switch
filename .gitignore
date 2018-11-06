@@ -5,3 +5,5 @@
 /*.ez
 erl_crash.dump
 /config/*.secret.exs
+/node_modules
+npm-debug.log

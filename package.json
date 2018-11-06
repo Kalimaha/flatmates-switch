@@ -1,0 +1,30 @@
+{
+  "name": "switch",
+  "version": "1.0.0",
+  "description": "Feature toggles server.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs",
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kalimaha/switch.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Kalimaha/switch/issues"
+  },
+  "homepage": "https://github.com/Kalimaha/switch#readme",
+  "dependencies": {
+    "babel": "^6.23.0",
+    "react": "^16.6.0",
+    "react-redux": "^5.1.0",
+    "redux": "^4.0.1",
+    "webpack": "^4.25.1"
+  }
+}
