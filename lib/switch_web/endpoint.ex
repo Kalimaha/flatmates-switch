@@ -1,7 +1,7 @@
 defmodule SwitchWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :switch
 
-  socket "/socket", SwitchWeb.UserSocket
+  # socket "/socket", SwitchWeb.UserSocket
 
   # Serve at "/" the static files from "priv/static" directory.
   #
