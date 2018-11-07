@@ -27,9 +27,16 @@ defmodule SwitchWeb.FeatureToggleRepositoryTest do
   end
 
   test "returns all the available records in the DB" do
-    FeatureToggle.changeset(%FeatureToggle{}, @feature_toggle)
-    |> Repo.insert
+    FeatureToggleRepository.save(@feature_toggle)
 
     assert (length FeatureToggleRepository.list) == 1
+  end
+
+  test "updates an existing record in the DB" do
+    { :ok, record } = FeatureToggleRepository.save(@feature_toggle)
+    FeatureToggleRepository.update(record.id, %{ :status => "bacon", :env => "prod" })
+
+    assert FeatureToggleRepository.get(record.id).status == "bacon"
+    assert FeatureToggleRepository.get(record.id).env == "prod"
   end
 end

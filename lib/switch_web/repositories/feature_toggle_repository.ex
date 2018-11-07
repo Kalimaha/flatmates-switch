@@ -12,7 +12,18 @@ defmodule SwitchWeb.FeatureToggleRepository do
   end
 
   def delete(id) do
-    Repo.get(FeatureToggle, id)
+    get(id)
     |> Repo.delete
+  end
+
+  def get(id) do
+    Repo.get(FeatureToggle, id)
+  end
+
+  def update(id, new_params) do
+    record = get(id)
+
+    FeatureToggle.changeset(record, new_params)
+    |> Repo.update
   end
 end
