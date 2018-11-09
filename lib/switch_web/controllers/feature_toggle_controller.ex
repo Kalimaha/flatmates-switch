@@ -26,4 +26,12 @@ defmodule SwitchWeb.FeatureToggleController do
     |> put_status(:ok)
     |> json(:ok)
   end
+
+  def update(conn, params) do
+    { :ok, feature_toggle } = FeatureToggleRepository.update(params["id"], params)
+
+    conn
+    |> put_status(:ok)
+    |> json(feature_toggle)
+  end
 end
