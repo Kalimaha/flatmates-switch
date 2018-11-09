@@ -11,7 +11,7 @@ Rules are used to determine whether a given user must be assigned, or not, to a 
 
 ## Create user
 
-A user is represented by a payload, _e.g. `{ id: 123, location: "Melbourne" }`_
+A user is represented by a payload, _e.g. `{ id: 123, location: "Melbourne" }`_. User should also have an attribute to identify the origin system, _e.g. { origin: "flatmates" }_.
 
 * START
   * id present?
