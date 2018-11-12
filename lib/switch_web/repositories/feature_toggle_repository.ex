@@ -4,7 +4,7 @@ defmodule SwitchWeb.FeatureToggleRepository do
 
   def save(feature_toggle) do
     FeatureToggle.changeset(%FeatureToggle{}, feature_toggle)
-    |> Repo.insert
+    |> Repo.insert()
   end
 
   def list do
@@ -13,7 +13,7 @@ defmodule SwitchWeb.FeatureToggleRepository do
 
   def delete(id) do
     get(id)
-    |> Repo.delete
+    |> Repo.delete()
   end
 
   def get(id) do
@@ -24,6 +24,6 @@ defmodule SwitchWeb.FeatureToggleRepository do
     record = get(id)
 
     FeatureToggle.changeset(record, new_params)
-    |> Repo.update
+    |> Repo.update()
   end
 end

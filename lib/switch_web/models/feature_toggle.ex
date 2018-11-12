@@ -4,10 +4,11 @@ defmodule SwitchWeb.FeatureToggle do
   alias SwitchWeb.FeatureToggle
 
   @derive {Poison.Encoder, only: [:external_id, :env, :status]}
+
   schema "feature_toggles" do
-    field :external_id, :string
-    field :env,         :string
-    field :status,      :string
+    field(:external_id, :string)
+    field(:env, :string)
+    field(:status, :string)
 
     timestamps()
   end
