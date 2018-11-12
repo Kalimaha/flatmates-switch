@@ -7,3 +7,5 @@ erl_crash.dump
 /config/*.secret.exs
 /node_modules
 npm-debug.log
+.DS_Store
+.DS_Store?

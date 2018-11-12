@@ -8,7 +8,15 @@
     "test": "test"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest --config=jest.config.json",
+    "test:watch": "jest --watchAll --verbose --config=jest.config.json",
+    "test:coverage": "jest --coverage --config=jest.config.json",
+    "dev": "webpack --config=./webpack.config.babel.js --watch --hot --progress --mode=development",
+    "dev:debug": "webpack --config=./webpack.config.babel.js --watch --hot --progress --debug",
+    "build": "webpack --config=./webpack.config.babel.js --progress --mode=development",
+    "build:release": "webpack --config=./webpack.config.babel.js --progress --optimize-minimize --mode=production",
+    "server": "webpack-dev-server --config=./webpack.config.babel.js --hotOnly --progress --mode=development",
+    "start": "webpack-dev-server --config=./webpack.config.babel.js --mode=production"
   },
   "repository": {
     "type": "git",
@@ -20,11 +28,63 @@
     "url": "https://github.com/Kalimaha/switch/issues"
   },
   "homepage": "https://github.com/Kalimaha/switch#readme",
+  "browserslist": [
+    ">1%",
+    "last 4 versions",
+    "Firefox ESR",
+    "not ie < 10"
+  ],
   "dependencies": {
-    "babel": "^6.23.0",
-    "react": "^16.6.0",
-    "react-redux": "^5.1.0",
-    "redux": "^4.0.1",
-    "webpack": "^4.25.1"
+    "axios": "^0.18.0",
+    "prop-types": "^15.6.1",
+    "react": "^16.3.2",
+    "react-dom": "^16.3.2",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-promise": "^0.5.3",
+    "redux-thunk": "^2.2.0"
+  },
+  "devDependencies": {
+    "autoprefixer": "^8.4.1",
+    "babel-cli": "^6.26.0",
+    "babel-core": "^6.26.0",
+    "babel-eslint": "^8.0.1",
+    "babel-loader": "^7.1.2",
+    "babel-plugin-transform-react-constant-elements": "^6.23.0",
+    "babel-plugin-transform-react-inline-elements": "^6.22.0",
+    "babel-plugin-transform-react-remove-prop-types": "^0.4.10",
+    "babel-polyfill": "^6.26.0",
+    "babel-preset-airbnb": "2.4.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-react-hmre": "^1.1.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "babelify": "^8.0.0",
+    "clean-webpack-plugin": "^0.1.17",
+    "css-hot-loader": "^1.4.2",
+    "css-loader": "^0.28.7",
+    "enzyme": "^3.1.0",
+    "enzyme-adapter-react-16": "^1.0.2",
+    "eslint": "^4.10.0",
+    "eslint-config-airbnb": "^16.1.0",
+    "eslint-import-resolver-webpack": "^0.9.0",
+    "eslint-plugin-import": "^2.8.0",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "file-loader": "^1.1.5",
+    "identity-obj-proxy": "^3.0.0",
+    "jest": "^22.4.3",
+    "jest-webpack-alias": "^3.3.3",
+    "live-server": "^1.2.0",
+    "mini-css-extract-plugin": "^0.4.0",
+    "node-sass": "^4.5.3",
+    "postcss-loader": "^2.0.8",
+    "react-hot-loader": "^4.3.4",
+    "redux-mock-store": "^1.5.1",
+    "sass-loader": "^7.0.1",
+    "webpack": "4.19.1",
+    "webpack-bundle-analyzer": "^2.13.1",
+    "webpack-cli": "^2.1.4",
+    "webpack-dev-server": "^3.1.5"
   }
 }
