@@ -1,5 +1,9 @@
 {
   "skip_files": [
-    "test/support"
+    "test/support",
+    "lib/switch/application.ex",
+    "lib/switch_web/views",
+    "lib/switch_web/endpoint.ex",
+    "lib/switch.ex"
   ]
 }
