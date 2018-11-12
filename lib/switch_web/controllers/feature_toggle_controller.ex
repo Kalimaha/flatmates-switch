@@ -11,6 +11,14 @@ defmodule SwitchWeb.FeatureToggleController do
     |> json(feature_toggles)
   end
 
+  def show(conn, params) do
+    feature_toggle = FeatureToggleRepository.get(params["id"])
+
+    conn
+    |> put_status(200)
+    |> json(feature_toggle)
+  end
+
   def create(conn, params) do
     {:ok, feature_toggle} = FeatureToggleRepository.save(params)
 
