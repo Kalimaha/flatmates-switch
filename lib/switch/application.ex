@@ -11,7 +11,7 @@ defmodule Switch.Application do
       # Start the Ecto repository
       supervisor(Switch.Repo, []),
       # Start the endpoint when the application starts
-      supervisor(SwitchWeb.Endpoint, []),
+      supervisor(SwitchWeb.Endpoint, [])
       # Start your own worker by calling: Switch.Worker.start_link(arg1, arg2, arg3)
       # worker(Switch.Worker, [arg1, arg2, arg3]),
     ]
