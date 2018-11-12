@@ -68,4 +68,13 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
     assert FeatureToggleRepository.get(record.id).status == "rotten"
     assert FeatureToggleRepository.get(record.id).external_id == "eggs"
   end
+
+  test "returns single feature toggle" do
+    feature_toggle = %{external_id: "spam", status: "active", env: "prod"}
+    {:ok, record} = FeatureToggleRepository.save(feature_toggle)
+
+    response = conn |> get(feature_toggle_path(conn, :show, record.id)) |> json_response(200)
+
+    assert response == %{"env" => "prod", "external_id" => "spam", "status" => "active"}
+  end
 end
