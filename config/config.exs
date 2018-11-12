@@ -14,8 +14,7 @@ config :switch, SwitchWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "9RCmWcO2IhRwg9UcxZhMd8Un7hemmZDHxjH6zW68NhaoM7n0qEM0LnUpxKiNLEPN",
   render_errors: [view: SwitchWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Switch.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  pubsub: [name: Switch.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -24,4 +23,4 @@ config :logger, :console,
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"
