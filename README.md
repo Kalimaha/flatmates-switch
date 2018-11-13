@@ -14,8 +14,8 @@ docker-compose build
 The first time you will need to create the DB:
 
 ```
-docker-compose run web mix ecto.create
-docker-compose run web mix ecto.migrate
+docker-compose run web mix db.create
+docker-compose run web mix db.migrate
 ```
 
 Then, to start the app:
@@ -30,8 +30,8 @@ You can now visit the homepage at http://localhost:4000.
 The first time you will need to create the DB:
 
 ```
-docker-compose run test mix ecto.create
-docker-compose run test mix ecto.migrate
+docker-compose run test mix db.create
+docker-compose run test mix db.migrate
 ```
 
 To run tests, execute:

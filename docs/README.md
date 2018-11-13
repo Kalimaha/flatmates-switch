@@ -5,9 +5,9 @@
 Rules are used to determine whether a given user must be assigned, or not, to a bucket.
 
 * `SIMPLE`: Either `true` or `false` for everybody
-* `ATTRIBUTES`: Determined based on user attribute, _e.g. location_
+* `ATTRIBUTES_BASED`: Determined based on user attribute, _e.g. location_
 * `GODSEND`: Determined based on a threshold, _e.g. 20%_
-* `ATTRIBUTES_GODSEND`: Users that comply to attributes-based rules may be assigned, or not, to a bucket, based on a threshold, _e.g. 20% of users in Melbourne_
+* `ATTRIBUTES_BASED_GODSEND`: Users that comply to attributes-based rules may be assigned, or not, to a bucket, based on a threshold, _e.g. 20% of users in Melbourne_
 
 ## Create user
 

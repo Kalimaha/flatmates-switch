@@ -6,7 +6,8 @@ defmodule SwitchWeb.FeatureToggleTest do
   @valid_attributes %{
     :external_id => "spam_and_eggs",
     :env => "test",
-    :status => "active"
+    :status => "active",
+    :type => "simple"
   }
 
   test "changeset with valid attributes" do
@@ -16,14 +17,23 @@ defmodule SwitchWeb.FeatureToggleTest do
   end
 
   test "validates required 'external_id' parameter" do
-    changeset = FeatureToggle.changeset(%FeatureToggle{}, %{:env => "test", :status => "active"})
+    changeset =
+      FeatureToggle.changeset(%FeatureToggle{}, %{
+        :env => "test",
+        :status => "active",
+        :type => "simple"
+      })
 
     refute changeset.valid?
   end
 
   test "validates required 'status' parameter" do
     changeset =
-      FeatureToggle.changeset(%FeatureToggle{}, %{:external_id => "spam_and_eggs", :env => "test"})
+      FeatureToggle.changeset(%FeatureToggle{}, %{
+        :external_id => "spam_and_eggs",
+        :env => "test",
+        :type => "simple"
+      })
 
     refute changeset.valid?
   end
@@ -32,7 +42,31 @@ defmodule SwitchWeb.FeatureToggleTest do
     changeset =
       FeatureToggle.changeset(%FeatureToggle{}, %{
         :external_id => "spam_and_eggs",
-        :status => "active"
+        :status => "active",
+        :type => "simple"
+      })
+
+    refute changeset.valid?
+  end
+
+  test "validates required 'type' parameter" do
+    changeset =
+      FeatureToggle.changeset(%FeatureToggle{}, %{
+        :external_id => "spam_and_eggs",
+        :status => "active",
+        :env => "test"
+      })
+
+    refute changeset.valid?
+  end
+
+  test "validates inclusion for 'type' parameter" do
+    changeset =
+      FeatureToggle.changeset(%FeatureToggle{}, %{
+        :external_id => "spam_and_eggs",
+        :status => "active",
+        :env => "test",
+        :type => "unknown_type"
       })
 
     refute changeset.valid?

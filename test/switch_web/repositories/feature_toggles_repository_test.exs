@@ -7,7 +7,8 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
   @feature_toggle %{
     :external_id => "spam",
     :status => "eggs",
-    :env => "bacon"
+    :env => "bacon",
+    :type => "simple"
   }
 
   test "save new content in the DB" do
