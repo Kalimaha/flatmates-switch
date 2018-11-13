@@ -4,7 +4,7 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
   alias SwitchWeb.{FeatureToggle, FeatureToggleRepository}
 
   test "returns an empty array when there are no toggles available", %{conn: conn} do
-    response = conn |> get(feature_toggle_path(conn, :index)) |> json_response(200)
+    response = conn |> get(feature_toggle_path(conn, :index)) |> json_response(:ok)
 
     assert response == []
   end
@@ -27,7 +27,7 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
       %{"external_id" => toggle_2.external_id, "status" => toggle_2.status, "env" => toggle_2.env}
     ]
 
-    response = conn |> get(feature_toggle_path(conn, :index)) |> json_response(200)
+    response = conn |> get(feature_toggle_path(conn, :index)) |> json_response(:ok)
     assert response == expected
   end
 
@@ -84,8 +84,14 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
     feature_toggle = %{external_id: "spam", status: "active", env: "prod"}
     {:ok, record} = FeatureToggleRepository.save(feature_toggle)
 
-    response = conn |> get(feature_toggle_path(conn, :show, record.id)) |> json_response(200)
+    response = conn |> get(feature_toggle_path(conn, :show, record.id)) |> json_response(:ok)
 
     assert response == %{"env" => "prod", "external_id" => "spam", "status" => "active"}
+  end
+
+  test "attempt to get a missing model", %{conn: conn} do
+    response = conn |> get(feature_toggle_path(conn, :show, 42)) |> json_response(:not_found)
+
+    assert response == "not_found"
   end
 end
