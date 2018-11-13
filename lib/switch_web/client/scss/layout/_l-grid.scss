@@ -1,0 +1,13 @@
+:global {
+  .l-col {
+    overflow: auto;
+    &--half {
+      & > .col-item {
+        @include query($desktop_trigger) {
+          float: left;
+          width: 50%;
+        }
+      }
+    }
+  }
+}
