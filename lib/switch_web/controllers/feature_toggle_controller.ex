@@ -1,7 +1,7 @@
 defmodule SwitchWeb.FeatureToggleController do
   use SwitchWeb, :controller
 
-  alias SwitchWeb.FeatureToggleRepository
+  alias SwitchWeb.{FeatureToggleRepository, ErrorHelpers}
 
   def index(conn, _params) do
     feature_toggles = FeatureToggleRepository.list()
@@ -20,11 +20,14 @@ defmodule SwitchWeb.FeatureToggleController do
   end
 
   def create(conn, params) do
-    {:ok, feature_toggle} = FeatureToggleRepository.save(params)
-
-    conn
-    |> put_status(:created)
-    |> json(feature_toggle)
+    with {:ok, feature_toggle} <- FeatureToggleRepository.save(params) do
+      conn
+      |> put_status(:created)
+      |> json(feature_toggle)
+    else
+      {:error, changeset} ->
+        conn |> put_status(422) |> json(%{errors: translate_errors(changeset)})
+    end
   end
 
   def delete(conn, params) do
@@ -41,5 +44,9 @@ defmodule SwitchWeb.FeatureToggleController do
     conn
     |> put_status(:ok)
     |> json(feature_toggle)
+  end
+
+  def translate_errors(changeset) do
+    Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
   end
 end
