@@ -16,12 +16,12 @@ defmodule SwitchWeb.Router do
   scope "/api", SwitchWeb do
     pipe_through(:api)
 
-    resources("/feature-toggles", FeatureToggleController)
+    resources("/feature-toggles", FeatureTogglesController)
   end
 
   scope "/", SwitchWeb do
     pipe_through(:browser)
 
-    get("/", PageController, :index)
+    get("/", PagesController, :index)
   end
 end

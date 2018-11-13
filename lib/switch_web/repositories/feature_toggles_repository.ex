@@ -1,4 +1,4 @@
-defmodule SwitchWeb.FeatureToggleRepository do
+defmodule SwitchWeb.FeatureTogglesRepository do
   alias Switch.Repo
   alias SwitchWeb.FeatureToggle
 
