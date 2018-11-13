@@ -14,9 +14,11 @@ defmodule SwitchWeb.FeatureToggleController do
   def show(conn, params) do
     feature_toggle = FeatureToggleRepository.get(params["id"])
 
-    conn
-    |> put_status(:ok)
-    |> json(feature_toggle)
+    unless feature_toggle == nil do
+      conn |> put_status(:ok) |> json(feature_toggle)
+    else
+      conn |> put_status(:not_found) |> json(:not_found)
+    end
   end
 
   def create(conn, params) do
