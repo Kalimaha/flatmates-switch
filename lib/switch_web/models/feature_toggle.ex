@@ -16,5 +16,6 @@ defmodule SwitchWeb.FeatureToggle do
   def changeset(%FeatureToggle{} = struct, attrs) do
     struct
     |> cast(attrs, [:external_id, :env, :status])
+    |> validate_required([:external_id, :env, :status])
   end
 end
