@@ -36,7 +36,7 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
 
     conn
     |> post(feature_toggle_path(conn, :create, feature_toggle), feature_toggle)
-    |> json_response(201)
+    |> json_response(:created)
 
     assert length(FeatureToggleRepository.list()) == 1
   end
@@ -47,10 +47,9 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
     response =
       conn
       |> post(feature_toggle_path(conn, :create, feature_toggle), feature_toggle)
-      |> json_response(422)
+      |> json_response(:unprocessable_entity)
 
-    assert response["errors"]["env"] == ["can't be blank"]
-    assert response["errors"]["status"] == ["can't be blank"]
+    assert response["errors"] == %{"env" => ["can't be blank"], "status" => ["can't be blank"]}
   end
 
   test "deletes record from the DB", %{conn: conn} do
@@ -59,7 +58,7 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
 
     conn
     |> delete(feature_toggle_path(conn, :delete, %FeatureToggle{id: record.id}))
-    |> json_response(200)
+    |> json_response(:ok)
 
     assert length(FeatureToggleRepository.list()) == 0
   end
@@ -74,7 +73,7 @@ defmodule SwitchWeb.FeatureToggleControllerTest do
       :env => "test",
       :status => "rotten"
     })
-    |> json_response(200)
+    |> json_response(:ok)
 
     assert FeatureToggleRepository.get(record.id).env == "test"
     assert FeatureToggleRepository.get(record.id).status == "rotten"

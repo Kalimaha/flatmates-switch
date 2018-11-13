@@ -7,7 +7,7 @@ defmodule SwitchWeb.FeatureToggleController do
     feature_toggles = FeatureToggleRepository.list()
 
     conn
-    |> put_status(200)
+    |> put_status(:ok)
     |> json(feature_toggles)
   end
 
@@ -15,7 +15,7 @@ defmodule SwitchWeb.FeatureToggleController do
     feature_toggle = FeatureToggleRepository.get(params["id"])
 
     conn
-    |> put_status(200)
+    |> put_status(:ok)
     |> json(feature_toggle)
   end
 
@@ -26,7 +26,7 @@ defmodule SwitchWeb.FeatureToggleController do
       |> json(feature_toggle)
     else
       {:error, changeset} ->
-        conn |> put_status(422) |> json(%{errors: translate_errors(changeset)})
+        conn |> put_status(:unprocessable_entity) |> json(%{errors: translate_errors(changeset)})
     end
   end
 
@@ -46,7 +46,7 @@ defmodule SwitchWeb.FeatureToggleController do
     |> json(feature_toggle)
   end
 
-  def translate_errors(changeset) do
+  defp translate_errors(changeset) do
     Ecto.Changeset.traverse_errors(changeset, &ErrorHelpers.translate_error/1)
   end
 end
