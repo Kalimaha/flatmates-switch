@@ -35,5 +35,5 @@ ReactDOM.render(
   <Provider store={store}>
     <AppLayout />
   </Provider>,
-  document.querySelector('.app')
+  document.querySelector('#switch-app')
 )
