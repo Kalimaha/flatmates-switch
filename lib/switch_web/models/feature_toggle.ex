@@ -1,7 +1,7 @@
 defmodule SwitchWeb.FeatureToggle do
   use Ecto.Schema
   import Ecto.Changeset
-  alias SwitchWeb.FeatureToggle
+  alias SwitchWeb.{FeatureToggle, FeatureToggleRule}
 
   @derive {Poison.Encoder, only: [:external_id, :env, :status, :type]}
 
@@ -12,6 +12,7 @@ defmodule SwitchWeb.FeatureToggle do
     field(:env, :string)
     field(:status, :string)
     field(:type, :string)
+    has_many(:feature_toggle_rules, FeatureToggleRule)
 
     timestamps()
   end
