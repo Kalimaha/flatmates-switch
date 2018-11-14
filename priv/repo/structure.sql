@@ -45,7 +45,8 @@ CREATE TABLE public.feature_toggle_rules (
     attribute_operation character varying(255),
     threshold double precision,
     inserted_at timestamp without time zone NOT NULL,
-    updated_at timestamp without time zone NOT NULL
+    updated_at timestamp without time zone NOT NULL,
+    type character varying(255) DEFAULT 'simple'::character varying NOT NULL
 );
 
 
@@ -162,5 +163,5 @@ ALTER TABLE ONLY public.feature_toggle_rules
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921);
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129);
 
