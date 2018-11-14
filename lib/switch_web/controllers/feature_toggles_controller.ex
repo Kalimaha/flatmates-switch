@@ -25,7 +25,7 @@ defmodule SwitchWeb.FeatureTogglesController do
     with {:ok, feature_toggle} <- FeatureTogglesRepository.save(params) do
       conn
       |> put_status(:created)
-      |> json(feature_toggle)
+      |> json(Switch.Repo.preload(feature_toggle, :feature_toggle_rules))
     else
       {:error, changeset} ->
         conn |> put_status(:unprocessable_entity) |> json(%{errors: translate_errors(changeset)})

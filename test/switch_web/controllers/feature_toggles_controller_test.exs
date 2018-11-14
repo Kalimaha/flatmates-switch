@@ -19,7 +19,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
         "external_id" => @feature_toggle.external_id,
         "status" => @feature_toggle.status,
         "env" => @feature_toggle.env,
-        "type" => @feature_toggle.type
+        "type" => @feature_toggle.type,
+        "feature_toggle_rules" => []
       }
     ]
 
@@ -87,7 +88,31 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "env" => "prod",
              "external_id" => "spam",
              "status" => "active",
-             "type" => "simple"
+             "type" => "simple",
+             "feature_toggle_rules" => []
+           }
+  end
+
+  test "returns single feature toggle with its rules", %{conn: conn} do
+    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    FeatureTogglesRepository.add_rule(record.id, %{:threshold => 0.25})
+
+    response = conn |> get(feature_toggles_path(conn, :show, record.id)) |> json_response(:ok)
+
+    assert response == %{
+             "env" => "prod",
+             "external_id" => "spam",
+             "status" => "active",
+             "type" => "simple",
+             "feature_toggle_rules" => [
+               %{
+                 "attribute_name" => nil,
+                 "attribute_operation" => nil,
+                 "attribute_value" => nil,
+                 "feature_toggle_id" => record.id,
+                 "threshold" => 0.25
+               }
+             ]
            }
   end
 

@@ -9,6 +9,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
 
   def list do
     Repo.all(FeatureToggle)
+    |> Repo.preload(:feature_toggle_rules)
   end
 
   def delete(id) do
