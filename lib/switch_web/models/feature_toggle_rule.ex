@@ -32,5 +32,6 @@ defmodule SwitchWeb.FeatureToggleRule do
       :threshold
     ])
     |> validate_required([:feature_toggle_id])
+    |> validate_number(:threshold, less_than_or_equal_to: 1.0, greater_than_or_equal_to: 0.0)
   end
 end

@@ -13,4 +13,18 @@ defmodule SwitchWeb.FeatureToggleRuleTest do
   test "changeset with invalid attributes" do
     refute FeatureToggleRule.changeset(%FeatureToggleRule{}, @invalid_attributes).valid?
   end
+
+  test "threshold must be less than or equal to 1.0" do
+    attributes = %{:feature_toggle_id => 42, :threshold => 3.14}
+    changeset = FeatureToggleRule.changeset(%FeatureToggleRule{}, attributes)
+
+    refute changeset.valid?
+  end
+
+  test "threshold must be greater than or equal to 0.0" do
+    attributes = %{:feature_toggle_id => 42, :threshold => -0.42}
+    changeset = FeatureToggleRule.changeset(%FeatureToggleRule{}, attributes)
+
+    refute changeset.valid?
+  end
 end
