@@ -53,4 +53,22 @@ defmodule SwitchWeb.FeatureTogglesRepository do
       {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
     end
   end
+
+  def remove_rule(feature_toggle_id, feature_toggle_rule_id) do
+    feature_toggle = get(feature_toggle_id)
+
+    unless feature_toggle == nil do
+      feature_toggle_rule =
+        feature_toggle.feature_toggle_rules |> Enum.find(&(&1.id == feature_toggle_rule_id))
+
+      unless feature_toggle_rule == nil do
+        feature_toggle_rule
+        |> Repo.delete()
+      else
+        {:error, "Feature toggle rule with ID #{feature_toggle_rule_id} not found."}
+      end
+    else
+      {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
+    end
+  end
 end

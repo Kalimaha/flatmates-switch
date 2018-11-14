@@ -93,4 +93,36 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
       assert message == "Feature toggle with ID 42 not found."
     end
   end
+
+  test "delete existing rule" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    FeatureTogglesRepository.remove_rule(feature_toggle.id, feature_toggle_rule.id)
+
+    assert length(FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules) == 0
+  end
+
+  test "delete existing rule with wrong feature toggle" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    FeatureTogglesRepository.remove_rule(42, feature_toggle_rule.id)
+
+    with {:error, message} <- FeatureTogglesRepository.remove_rule(42, feature_toggle_rule.id) do
+      assert message == "Feature toggle with ID 42 not found."
+    end
+  end
+
+  test "delete non existing feature toggle rule" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    with {:error, message} <- FeatureTogglesRepository.remove_rule(feature_toggle.id, 42) do
+      assert message == "Feature toggle rule with ID 42 not found."
+    end
+  end
 end
