@@ -18,6 +18,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
 
   def get(id) do
     Repo.get(FeatureToggle, id)
+    |> Repo.preload(:feature_toggle_rules)
   end
 
   def update(id, new_params) do
@@ -25,5 +26,11 @@ defmodule SwitchWeb.FeatureTogglesRepository do
 
     FeatureToggle.changeset(record, new_params)
     |> Repo.update()
+  end
+
+  def add_rule(feature_toggle_id, feature_toggle_rule_params) do
+    get(feature_toggle_id)
+    |> Ecto.build_assoc(:feature_toggle_rules, feature_toggle_rule_params)
+    |> Repo.insert()
   end
 end

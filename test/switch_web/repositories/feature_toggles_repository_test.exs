@@ -2,7 +2,7 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
   use Switch.DataCase
 
   alias Switch.Repo
-  alias SwitchWeb.{FeatureToggle, FeatureTogglesRepository}
+  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureTogglesRepository}
 
   @feature_toggle %{
     :external_id => "spam",
@@ -39,5 +39,22 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
 
     assert FeatureTogglesRepository.get(record.id).status == "bacon"
     assert FeatureTogglesRepository.get(record.id).env == "prod"
+  end
+
+  test "add rule to existing feature toggle" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    assert length(FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules) == 1
+
+    assert Enum.map(
+             FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules,
+             & &1.feature_toggle_id
+           ) == [feature_toggle.id]
+
+    assert Enum.map(
+             FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules,
+             & &1.threshold
+           ) == [0.42]
   end
 end
