@@ -1,6 +1,6 @@
 defmodule SwitchWeb.FeatureTogglesRepository do
   alias Switch.Repo
-  alias SwitchWeb.FeatureToggle
+  alias SwitchWeb.{FeatureToggle, FeatureToggleRule}
 
   def save(feature_toggle) do
     FeatureToggle.changeset(%FeatureToggle{}, feature_toggle)
@@ -29,8 +29,27 @@ defmodule SwitchWeb.FeatureTogglesRepository do
   end
 
   def add_rule(feature_toggle_id, feature_toggle_rule_params) do
-    get(feature_toggle_id)
-    |> Ecto.build_assoc(:feature_toggle_rules, feature_toggle_rule_params)
-    |> Repo.insert()
+    feature_toggle = get(feature_toggle_id)
+
+    unless feature_toggle == nil do
+      feature_toggle
+      |> Ecto.build_assoc(:feature_toggle_rules, feature_toggle_rule_params)
+      |> Repo.insert()
+    else
+      {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
+    end
+  end
+
+  def update_rule(feature_toggle_id, feature_toggle_rule_id, feature_toggle_rule_params) do
+    feature_toggle = get(feature_toggle_id)
+
+    unless feature_toggle == nil do
+      feature_toggle.feature_toggle_rules
+      |> Enum.find(&(&1.id == feature_toggle_rule_id))
+      |> FeatureToggleRule.changeset(feature_toggle_rule_params)
+      |> Repo.update()
+    else
+      {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
+    end
   end
 end
