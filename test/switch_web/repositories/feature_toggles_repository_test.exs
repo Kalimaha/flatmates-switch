@@ -2,7 +2,7 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
   use Switch.DataCase
 
   alias Switch.Repo
-  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureTogglesRepository}
+  alias SwitchWeb.{FeatureToggle, FeatureTogglesRepository}
 
   @feature_toggle %{
     :external_id => "spam",
