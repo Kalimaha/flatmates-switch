@@ -58,8 +58,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     feature_toggle = get(feature_toggle_id)
 
     unless feature_toggle == nil do
-      feature_toggle_rule =
-        feature_toggle.feature_toggle_rules |> Enum.find(&(&1.id == feature_toggle_rule_id))
+      feature_toggle_rule = Repo.get(FeatureToggleRule, feature_toggle_rule_id)
 
       unless feature_toggle_rule == nil do
         feature_toggle_rule
