@@ -34,6 +34,41 @@ SET default_tablespace = '';
 SET default_with_oids = false;
 
 --
+-- Name: feature_toggle_rules; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.feature_toggle_rules (
+    id bigint NOT NULL,
+    feature_toggle_id bigint NOT NULL,
+    attribute_name character varying(255),
+    attribute_value double precision,
+    attribute_operation character varying(255),
+    threshold double precision,
+    inserted_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: feature_toggle_rules_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.feature_toggle_rules_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: feature_toggle_rules_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.feature_toggle_rules_id_seq OWNED BY public.feature_toggle_rules.id;
+
+
+--
 -- Name: feature_toggles; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -78,10 +113,25 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: feature_toggle_rules id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.feature_toggle_rules ALTER COLUMN id SET DEFAULT nextval('public.feature_toggle_rules_id_seq'::regclass);
+
+
+--
 -- Name: feature_toggles id; Type: DEFAULT; Schema: public; Owner: -
 --
 
 ALTER TABLE ONLY public.feature_toggles ALTER COLUMN id SET DEFAULT nextval('public.feature_toggles_id_seq'::regclass);
+
+
+--
+-- Name: feature_toggle_rules feature_toggle_rules_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.feature_toggle_rules
+    ADD CONSTRAINT feature_toggle_rules_pkey PRIMARY KEY (id);
 
 
 --
@@ -101,8 +151,16 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: feature_toggle_rules feature_toggle_rules_feature_toggle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.feature_toggle_rules
+    ADD CONSTRAINT feature_toggle_rules_feature_toggle_id_fkey FOREIGN KEY (feature_toggle_id) REFERENCES public.feature_toggles(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946);
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921);
 

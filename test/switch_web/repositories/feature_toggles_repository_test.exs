@@ -40,4 +40,89 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
     assert FeatureTogglesRepository.get(record.id).status == "bacon"
     assert FeatureTogglesRepository.get(record.id).env == "prod"
   end
+
+  test "add rule to existing feature toggle" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    assert length(FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules) == 1
+
+    assert Enum.map(
+             FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules,
+             & &1.feature_toggle_id
+           ) == [feature_toggle.id]
+
+    assert Enum.map(
+             FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules,
+             & &1.threshold
+           ) == [0.42]
+  end
+
+  test "add rule to non-existing feature toggle" do
+    with {:error, message} <- FeatureTogglesRepository.add_rule(42, %{:threshold => 0.42}) do
+      assert message == "Feature toggle with ID 42 not found."
+    end
+  end
+
+  test "update existing rule" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    FeatureTogglesRepository.update_rule(feature_toggle.id, feature_toggle_rule.id, %{
+      :threshold => 0.84
+    })
+
+    assert length(FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules) == 1
+
+    assert Enum.map(
+             FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules,
+             & &1.threshold
+           ) == [0.84]
+  end
+
+  test "update existing rule with wrong feature toggle" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    with {:error, message} <-
+           FeatureTogglesRepository.update_rule(42, feature_toggle_rule.id, %{:threshold => 0.84}) do
+      assert message == "Feature toggle with ID 42 not found."
+    end
+  end
+
+  test "delete existing rule" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    FeatureTogglesRepository.remove_rule(feature_toggle.id, feature_toggle_rule.id)
+
+    assert length(FeatureTogglesRepository.get(feature_toggle.id).feature_toggle_rules) == 0
+  end
+
+  test "delete existing rule with wrong feature toggle" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    {:ok, feature_toggle_rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    FeatureTogglesRepository.remove_rule(42, feature_toggle_rule.id)
+
+    with {:error, message} <- FeatureTogglesRepository.remove_rule(42, feature_toggle_rule.id) do
+      assert message == "Feature toggle with ID 42 not found."
+    end
+  end
+
+  test "delete non existing feature toggle rule" do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+
+    with {:error, message} <- FeatureTogglesRepository.remove_rule(feature_toggle.id, 42) do
+      assert message == "Feature toggle rule with ID 42 not found."
+    end
+  end
 end
