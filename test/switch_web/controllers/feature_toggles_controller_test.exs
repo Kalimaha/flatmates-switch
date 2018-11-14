@@ -113,7 +113,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
                  "attribute_operation" => nil,
                  "attribute_value" => nil,
                  "feature_toggle_id" => record.id,
-                 "threshold" => 0.25
+                 "threshold" => 0.25,
+                 "type" => "simple"
                }
              ]
            }
