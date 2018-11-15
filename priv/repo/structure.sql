@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.10
+-- Dumped from database version 9.6.11
 -- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
@@ -267,4 +267,7 @@ ALTER TABLE ONLY public.switches
 -- PostgreSQL database dump complete
 --
 
+<<<<<<< HEAD
 INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115222609);
+=======
+>>>>>>> Switch model
