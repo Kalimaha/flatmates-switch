@@ -16,7 +16,9 @@ defmodule SwitchWeb.Router do
   scope "/api", SwitchWeb do
     pipe_through(:api)
 
-    resources("/feature-toggles", FeatureTogglesController)
+    resources("/feature-toggles", FeatureTogglesController) do
+      resources("/rules", FeatureToggleRulesController)
+    end
   end
 
   scope "/", SwitchWeb do
