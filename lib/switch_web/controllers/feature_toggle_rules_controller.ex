@@ -17,9 +17,8 @@ defmodule SwitchWeb.FeatureToggleRulesController do
     feature_toggle_rule = FeatureToggleRulesRepository.get(params["id"])
 
     case {feature_toggle, feature_toggle_rule} do
-      {nil, nil} -> conn |> put_status(:no_content) |> json(:no_content)
-      {_, nil} -> conn |> put_status(:no_content) |> json(:no_content)
       {nil, _} -> conn |> put_status(:no_content) |> json(:no_content)
+      {_, nil} -> conn |> put_status(:no_content) |> json(:no_content)
       {_, _} -> conn |> put_status(:ok) |> json(feature_toggle_rule)
     end
   end
