@@ -115,6 +115,39 @@ CREATE TABLE public.schema_migrations (
 
 
 --
+-- Name: switches; Type: TABLE; Schema: public; Owner: -
+--
+
+CREATE TABLE public.switches (
+    id bigint NOT NULL,
+    user_id bigint NOT NULL,
+    feature_toggle_name character varying(255),
+    value boolean,
+    inserted_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL
+);
+
+
+--
+-- Name: switches_id_seq; Type: SEQUENCE; Schema: public; Owner: -
+--
+
+CREATE SEQUENCE public.switches_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+--
+-- Name: switches_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: -
+--
+
+ALTER SEQUENCE public.switches_id_seq OWNED BY public.switches.id;
+
+
+--
 -- Name: users; Type: TABLE; Schema: public; Owner: -
 --
 
@@ -161,6 +194,13 @@ ALTER TABLE ONLY public.feature_toggles ALTER COLUMN id SET DEFAULT nextval('pub
 
 
 --
+-- Name: switches id; Type: DEFAULT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.switches ALTER COLUMN id SET DEFAULT nextval('public.switches_id_seq'::regclass);
+
+
+--
 -- Name: users id; Type: DEFAULT; Schema: public; Owner: -
 --
 
@@ -192,6 +232,14 @@ ALTER TABLE ONLY public.schema_migrations
 
 
 --
+-- Name: switches switches_pkey; Type: CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.switches
+    ADD CONSTRAINT switches_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -208,8 +256,15 @@ ALTER TABLE ONLY public.feature_toggle_rules
 
 
 --
+-- Name: switches switches_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.switches
+    ADD CONSTRAINT switches_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
 INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115222609);
-
