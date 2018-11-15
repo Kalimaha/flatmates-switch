@@ -1,4 +1,5 @@
 import React from "react";
+import logo from "img/logo.png";
 import styles from "./styles.scss";
 
 function HeaderLayout() {
@@ -12,7 +13,10 @@ function HeaderLayout() {
     <header className={styles.header}>
       <div dangerouslySetInnerHTML={{ __html: BROWSE_HAPPY }} />
       <div className="l-pg l-pg--width">
-        <h1>Switchboard</h1>
+        <h1 className={styles.heading}>Switchboard</h1>
+        <a className={styles.logo} href="/">
+          <img src={logo} />
+        </a>
       </div>
     </header>
   );

@@ -16,4 +16,15 @@
       padding-top: $grid_gutter/2;
     }
   }
+  .heading {
+    float: left;
+  }
+  .logo {
+    float: right;
+    display: inline-block;
+    padding: $grid_gutter/2;
+    img {
+      max-width: 120px;
+    }
+  }
 }
