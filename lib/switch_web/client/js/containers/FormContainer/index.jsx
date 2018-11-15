@@ -9,11 +9,11 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
-import Paper from "@material-ui/core/Paper";
 import FormControl from "@material-ui/core/FormControl";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
+import Slide from "@material-ui/core/Slide";
 
 const styles = theme => ({
   root: {
@@ -38,6 +38,10 @@ const styles = theme => ({
   },
 });
 
+function Transition(props) {
+  return <Slide direction="up" {...props} />;
+}
+
 class FormContainer extends PureComponent {
   state = {
     externalId: "",
@@ -54,13 +58,34 @@ class FormContainer extends PureComponent {
   renderAddForm = () => {
     const { classes, ...other } = this.props;
     return (
-      <Dialog onClose={this.handleClose} aria-labelledby="simple-dialog-title" {...other}>
+      <Dialog
+        TransitionComponent={Transition}
+        onClose={this.handleClose}
+        aria-labelledby="simple-dialog-title"
+        {...other}
+      >
         <DialogTitle id="simple-dialog-title">Add Toggle</DialogTitle>
         <DialogContent>
           <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="component-simple">External ID</InputLabel>
-            <Input id="component-simple" value={this.state.name} onChange={this.handleChange} />
-            <FormHelperText id="component-helper-text">External ID to be sent</FormHelperText>
+            <InputLabel htmlFor="input-external-id">External ID</InputLabel>
+            <Input id="input-external-id" value={this.state.id} onChange={this.handleChange} />
+            <FormHelperText id="input-external-helper-text">External ID to be sent</FormHelperText>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="input-env">Environment</InputLabel>
+            <Input id="input-env" value={this.state.env} onChange={this.handleChange} />
+            <FormHelperText id="input-env-helper-text">Test, Staging, Prod</FormHelperText>
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="input-active">Active</InputLabel>
+            <Input id="input-active" value={this.state.active} onChange={this.handleChange} />
+          </FormControl>
+          <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="input-type">Type</InputLabel>
+            <Input id="input-type" value={this.state.type} onChange={this.handleChange} />
+            <FormHelperText id="input-type-helper-text">
+              "simple", "attributes_based", "godsend", "attributes_based_godsend"
+            </FormHelperText>
           </FormControl>
         </DialogContent>
 

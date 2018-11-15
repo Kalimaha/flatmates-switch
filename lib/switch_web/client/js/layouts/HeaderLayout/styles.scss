@@ -4,7 +4,7 @@
   .header {
     overflow: auto;
     clear: both;
-    padding: 0;
+    padding: $grid_gutter 0;
     .l-pg--width {
       border-bottom: 1px solid $border_color;
       margin-bottom: $grid_gutter;
