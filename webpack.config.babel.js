@@ -24,11 +24,11 @@ const config = (env, argv) => ({
     inline: true,
     hot: true,
     stats: "errors-only",
-    port: 9000,
+    port: 4001,
   },
   output: {
     path: path.resolve(__dirname, "priv/static"),
-    publicPath: "/priv/static/",
+    publicPath: "/",
     pathinfo: argv.mode === "development",
     filename: "js/[name].js?[hash:8]",
     chunkFilename: "js/[name].js?[hash:8][chunkhash:8]",
