@@ -126,4 +126,84 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
 
     assert response == "no_content"
   end
+
+  test "add a rule to an existing feature toggle", %{conn: conn} do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    rule = %{:type => "simple"}
+
+    response =
+      conn
+      |> post(feature_toggles_feature_toggle_rules_path(conn, :create, feature_toggle.id), rule)
+      |> json_response(:created)
+
+    assert response == %{
+             "attribute_name" => nil,
+             "attribute_operation" => nil,
+             "attribute_value" => nil,
+             "feature_toggle_id" => feature_toggle.id,
+             "threshold" => nil,
+             "type" => nil
+           }
+  end
+
+  test "attempt to add a rule to a non existing feature toggle", %{conn: conn} do
+    rule = %{:feature_toggle_id => 42, :type => "simple"}
+
+    response =
+      conn
+      |> post(feature_toggles_feature_toggle_rules_path(conn, :create, 42), rule)
+      |> json_response(:unprocessable_entity)
+
+    assert response == "unprocessable_entity"
+  end
+
+  test "update existing rule", %{conn: conn} do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+
+    new_rule = %{:threshold => 0.84}
+
+    response =
+      conn
+      |> put(
+        feature_toggles_feature_toggle_rules_path(conn, :update, feature_toggle.id, rule.id),
+        new_rule
+      )
+      |> json_response(:ok)
+
+    assert response == %{
+             "attribute_name" => nil,
+             "attribute_operation" => nil,
+             "attribute_value" => nil,
+             "feature_toggle_id" => feature_toggle.id,
+             "threshold" => 0.84,
+             "type" => "simple"
+           }
+  end
+
+  test "attempt to update a rule for a non existing feature toggle", %{conn: conn} do
+    new_rule = %{:threshold => 0.84}
+
+    response =
+      conn
+      |> put(feature_toggles_feature_toggle_rules_path(conn, :update, 42, 42), new_rule)
+      |> json_response(:not_found)
+
+    assert response == "Feature toggle with ID 42 not found."
+  end
+
+  test "attempt to update a non existing rule", %{conn: conn} do
+    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    new_rule = %{:threshold => 0.84}
+
+    response =
+      conn
+      |> put(
+        feature_toggles_feature_toggle_rules_path(conn, :update, feature_toggle.id, 42),
+        new_rule
+      )
+      |> json_response(:not_found)
+
+    assert response == "Feature toggle rule with ID 42 not found."
+  end
 end

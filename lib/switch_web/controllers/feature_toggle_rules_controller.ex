@@ -34,4 +34,35 @@ defmodule SwitchWeb.FeatureToggleRulesController do
       {:error, message} -> conn |> put_status(:no_content) |> json(message)
     end
   end
+
+  def create(conn, params) do
+    feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
+
+    unless feature_toggle == nil do
+      {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, params)
+
+      conn
+      |> put_status(:created)
+      |> json(rule)
+    else
+      conn
+      |> put_status(:unprocessable_entity)
+      |> json(:unprocessable_entity)
+    end
+  end
+
+  def update(conn, params) do
+    with {:ok, rule} <-
+           FeatureTogglesRepository.update_rule(
+             params["feature_toggles_id"],
+             params["id"],
+             params
+           ) do
+      conn
+      |> put_status(:ok)
+      |> json(rule)
+    else
+      {:error, message} -> conn |> put_status(:not_found) |> json(message)
+    end
+  end
 end
