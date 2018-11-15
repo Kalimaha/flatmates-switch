@@ -6,8 +6,9 @@ defmodule SwitchWeb.FeatureToggleTest do
   @valid_attributes %{
     :external_id => "spam_and_eggs",
     :env => "test",
-    :status => "active",
-    :type => "simple"
+    :active => true,
+    :type => "simple",
+    :label => "Spam & Eggs"
   }
 
   test "changeset with valid attributes" do
@@ -20,7 +21,7 @@ defmodule SwitchWeb.FeatureToggleTest do
     changeset =
       FeatureToggle.changeset(%FeatureToggle{}, %{
         :env => "test",
-        :status => "active",
+        :active => true,
         :type => "simple"
       })
 
@@ -42,7 +43,7 @@ defmodule SwitchWeb.FeatureToggleTest do
     changeset =
       FeatureToggle.changeset(%FeatureToggle{}, %{
         :external_id => "spam_and_eggs",
-        :status => "active",
+        :active => true,
         :type => "simple"
       })
 
@@ -53,7 +54,7 @@ defmodule SwitchWeb.FeatureToggleTest do
     changeset =
       FeatureToggle.changeset(%FeatureToggle{}, %{
         :external_id => "spam_and_eggs",
-        :status => "active",
+        :active => true,
         :env => "test"
       })
 
@@ -64,7 +65,7 @@ defmodule SwitchWeb.FeatureToggleTest do
     changeset =
       FeatureToggle.changeset(%FeatureToggle{}, %{
         :external_id => "spam_and_eggs",
-        :status => "active",
+        :active => true,
         :env => "test",
         :type => "unknown_type"
       })

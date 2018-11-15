@@ -77,10 +77,11 @@ CREATE TABLE public.feature_toggles (
     id bigint NOT NULL,
     external_id character varying(255),
     env character varying(255),
-    status character varying(255),
     inserted_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
-    type character varying(255)
+    type character varying(255),
+    label character varying(255),
+    active boolean
 );
 
 
@@ -210,5 +211,5 @@ ALTER TABLE ONLY public.feature_toggle_rules
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724);
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115222609);
 

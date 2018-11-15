@@ -3,7 +3,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
 
   alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository}
 
-  @feature_toggle %{external_id: "spam", status: "active", env: "prod", type: "simple"}
+  @feature_toggle %{external_id: "spam", active: true, env: "prod", type: "simple", label: "Spam"}
 
   test "returns an empty array when feature toggle is not found", %{conn: conn} do
     response =
