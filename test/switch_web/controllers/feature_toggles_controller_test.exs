@@ -3,7 +3,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
   alias SwitchWeb.{FeatureToggle, FeatureTogglesRepository}
 
-  @feature_toggle %{external_id: "spam", status: "active", env: "prod", type: "simple"}
+  @feature_toggle %{external_id: "spam", active: true, env: "prod", type: "simple", label: "Spam"}
 
   test "returns an empty array when there are no toggles available", %{conn: conn} do
     response = conn |> get(feature_toggles_path(conn, :index)) |> json_response(:ok)
@@ -17,7 +17,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     expected = [
       %{
         "external_id" => record.external_id,
-        "status" => record.status,
+        "active" => record.active,
+        "label" => record.label,
         "env" => record.env,
         "type" => record.type,
         "feature_toggle_rules" => [],
@@ -47,7 +48,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
     assert response["errors"] == %{
              "env" => ["can't be blank"],
-             "status" => ["can't be blank"],
+             "active" => ["can't be blank"],
+             "label" => ["can't be blank"],
              "type" => ["can't be blank"]
            }
   end
@@ -69,13 +71,13 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     |> put(feature_toggles_path(conn, :update, record.id), %{
       :external_id => "eggs",
       :env => "test",
-      :status => "rotten",
+      :active => false,
       :type => "godsend"
     })
     |> json_response(:ok)
 
     assert FeatureTogglesRepository.get(record.id).env == "test"
-    assert FeatureTogglesRepository.get(record.id).status == "rotten"
+    assert FeatureTogglesRepository.get(record.id).active == false
     assert FeatureTogglesRepository.get(record.id).external_id == "eggs"
     assert FeatureTogglesRepository.get(record.id).type == "godsend"
   end
@@ -89,8 +91,9 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "id" => record.id,
              "env" => "prod",
              "external_id" => "spam",
-             "status" => "active",
+             "active" => true,
              "type" => "simple",
+             "label" => "Spam",
              "feature_toggle_rules" => []
            }
   end
@@ -105,8 +108,9 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "id" => record.id,
              "env" => "prod",
              "external_id" => "spam",
-             "status" => "active",
+             "active" => true,
              "type" => "simple",
+             "label" => "Spam",
              "feature_toggle_rules" => [
                %{
                  "attribute_name" => nil,

@@ -6,9 +6,10 @@ defmodule SwitchWeb.FeatureToggleRulesRepositoryTest do
 
   @feature_toggle %{
     :external_id => "spam",
-    :status => "eggs",
+    :active => true,
     :env => "bacon",
-    :type => "simple"
+    :type => "simple",
+    :label => "Spam"
   }
 
   test "gets a single rule" do

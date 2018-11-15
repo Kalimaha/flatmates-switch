@@ -6,9 +6,10 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
 
   @feature_toggle %{
     :external_id => "spam",
-    :status => "eggs",
+    :active => true,
     :env => "bacon",
-    :type => "simple"
+    :type => "simple",
+    :label => "Spam"
   }
 
   test "save new content in the DB" do
@@ -35,9 +36,9 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
 
   test "updates an existing record in the DB" do
     {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
-    FeatureTogglesRepository.update(record.id, %{:status => "bacon", :env => "prod"})
+    FeatureTogglesRepository.update(record.id, %{:active => false, :env => "prod"})
 
-    assert FeatureTogglesRepository.get(record.id).status == "bacon"
+    assert FeatureTogglesRepository.get(record.id).active == false
     assert FeatureTogglesRepository.get(record.id).env == "prod"
   end
 
