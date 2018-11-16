@@ -1,22 +1,21 @@
 defmodule SwitchWeb.SwitchesRepositoryTest do
   use Switch.DataCase
+  import Switch.Factory
 
   alias Switch.Repo
   alias SwitchWeb.{Switch, SwitchesRepository, UsersRepository}
 
-  @user %{external_id: "spam", source: "flatmates"}
-
   test "save new content in the DB" do
-    {:ok, record} = UsersRepository.save(@user)
-    switch = %{:user_id => record.id, :feature_toggle_name => "spam", :value => true}
+    user = insert(:user)
+    switch = params_for(:switch, user_id: user.id)
     SwitchesRepository.save(switch)
 
     assert length(Repo.all(Switch)) == 1
   end
 
   test "assigns an ID to the record" do
-    {:ok, record} = UsersRepository.save(@user)
-    switch = %{:user_id => record.id, :feature_toggle_name => "spam", :value => true}
+    user = insert(:user)
+    switch = params_for(:switch, user_id: user.id)
     {:ok, switch_record} = SwitchesRepository.save(switch)
 
     refute switch_record.id == nil
@@ -27,16 +26,16 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
   end
 
   test "returns all the available records in the DB" do
-    {:ok, record} = UsersRepository.save(@user)
-    switch = %{:user_id => record.id, :feature_toggle_name => "spam", :value => true}
+    user = insert(:user)
+    switch = params_for(:switch, user_id: user.id)
     SwitchesRepository.save(switch)
 
     assert length(SwitchesRepository.list()) == 1
   end
 
   test "updates an existing record in the DB" do
-    {:ok, record} = UsersRepository.save(@user)
-    switch = %{:user_id => record.id, :feature_toggle_name => "spam", :value => true}
+    user = insert(:user)
+    switch = params_for(:switch, user_id: user.id)
     {:ok, saved_switch} = SwitchesRepository.save(switch)
     SwitchesRepository.update(saved_switch.id, %{:value => false})
 
@@ -44,8 +43,8 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
   end
 
   test "deletes an existing record in the DB" do
-    {:ok, record} = UsersRepository.save(@user)
-    switch = %{:user_id => record.id, :feature_toggle_name => "spam", :value => true}
+    user = insert(:user)
+    switch = params_for(:switch, user_id: user.id)
     {:ok, saved_switch} = SwitchesRepository.save(switch)
     SwitchesRepository.delete(saved_switch.id)
 

@@ -1,9 +1,8 @@
 defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   use SwitchWeb.ConnCase
+  import Switch.Factory
 
   alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository}
-
-  @feature_toggle %{external_id: "spam", active: true, env: "prod", type: "simple", label: "Spam"}
 
   test "returns an empty array when feature toggle is not found", %{conn: conn} do
     response =
@@ -15,7 +14,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "returns an empty array when feature toggle has no rules", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    record = insert(:feature_toggle)
 
     response =
       conn
@@ -26,8 +25,8 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "returns rules associated with a feature toggle", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-    FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+    feature_toggle = insert(:feature_toggle)
+    FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
 
     response =
       conn
@@ -36,7 +35,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
 
     assert response == [
              %{
-               "threshold" => 0.42,
+               "threshold" => nil,
                "attribute_name" => nil,
                "attribute_operation" => nil,
                "attribute_value" => nil,
@@ -47,8 +46,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "deletes an existing rule", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-    {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
 
     response =
       conn
@@ -70,7 +71,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "attempt to delete a rule that does not exist", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     response =
       conn
@@ -81,8 +82,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "show a single rule", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-    {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
 
     response =
       conn
@@ -94,13 +97,13 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
              "attribute_operation" => nil,
              "attribute_value" => nil,
              "feature_toggle_id" => feature_toggle.id,
-             "threshold" => 0.42,
+             "threshold" => nil,
              "type" => "simple"
            }
   end
 
   test "attempt to show a single rule that does not exist", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     response =
       conn
@@ -111,7 +114,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "attempt to show a single rule for a feature toggle that does not exist", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
       FeatureToggleRulesRepository.save(%{
@@ -128,7 +131,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "add a rule to an existing feature toggle", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
     rule = %{:type => "simple"}
 
     response =
@@ -158,8 +161,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "update existing rule", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-    {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
 
     new_rule = %{:threshold => 0.84}
 
@@ -193,7 +198,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
   end
 
   test "attempt to update a non existing rule", %{conn: conn} do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
     new_rule = %{:threshold => 0.84}
 
     response =

@@ -1,18 +1,11 @@
 defmodule SwitchWeb.FeatureToggleTest do
   use Switch.DataCase
+  import Switch.Factory
 
   alias SwitchWeb.FeatureToggle
 
-  @valid_attributes %{
-    :external_id => "spam_and_eggs",
-    :env => "test",
-    :active => true,
-    :type => "simple",
-    :label => "Spam & Eggs"
-  }
-
   test "changeset with valid attributes" do
-    changeset = FeatureToggle.changeset(%FeatureToggle{}, @valid_attributes)
+    changeset = FeatureToggle.changeset(%FeatureToggle{}, params_for(:feature_toggle))
 
     assert changeset.valid?
   end

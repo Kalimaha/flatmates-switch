@@ -1,9 +1,8 @@
 defmodule SwitchWeb.FeatureTogglesControllerTest do
   use SwitchWeb.ConnCase
+  import Switch.Factory
 
   alias SwitchWeb.{FeatureToggle, FeatureTogglesRepository}
-
-  @feature_toggle %{external_id: "spam", active: true, env: "prod", type: "simple", label: "Spam"}
 
   test "returns an empty array when there are no toggles available", %{conn: conn} do
     response = conn |> get(feature_toggles_path(conn, :index)) |> json_response(:ok)
@@ -12,17 +11,16 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
   end
 
   test "returns all the available feature toggles", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     expected = [
       %{
-        "external_id" => record.external_id,
-        "active" => record.active,
-        "label" => record.label,
-        "env" => record.env,
-        "type" => record.type,
+        "external_id" => feature_toggle.external_id,
+        "status" => feature_toggle.status,
+        "env" => feature_toggle.env,
+        "type" => feature_toggle.type,
         "feature_toggle_rules" => [],
-        "id" => record.id
+        "id" => feature_toggle.id
       }
     ]
 
@@ -32,7 +30,10 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
   test "inserts a new record in the DB", %{conn: conn} do
     conn
-    |> post(feature_toggles_path(conn, :create, @feature_toggle), @feature_toggle)
+    |> post(
+      feature_toggles_path(conn, :create, params_for(:feature_toggle)),
+      params_for(:feature_toggle)
+    )
     |> json_response(:created)
 
     assert length(FeatureTogglesRepository.list()) == 1
@@ -55,20 +56,20 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
   end
 
   test "deletes record from the DB", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     conn
-    |> delete(feature_toggles_path(conn, :delete, %FeatureToggle{id: record.id}))
+    |> delete(feature_toggles_path(conn, :delete, %FeatureToggle{id: feature_toggle.id}))
     |> json_response(:ok)
 
     assert length(FeatureTogglesRepository.list()) == 0
   end
 
   test "updates existing records in the DB", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
     conn
-    |> put(feature_toggles_path(conn, :update, record.id), %{
+    |> put(feature_toggles_path(conn, :update, feature_toggle.id), %{
       :external_id => "eggs",
       :env => "test",
       :active => false,
@@ -76,22 +77,23 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     })
     |> json_response(:ok)
 
-    assert FeatureTogglesRepository.get(record.id).env == "test"
-    assert FeatureTogglesRepository.get(record.id).active == false
-    assert FeatureTogglesRepository.get(record.id).external_id == "eggs"
-    assert FeatureTogglesRepository.get(record.id).type == "godsend"
+    assert FeatureTogglesRepository.get(feature_toggle.id).env == "test"
+    assert FeatureTogglesRepository.get(feature_toggle.id).status == "rotten"
+    assert FeatureTogglesRepository.get(feature_toggle.id).external_id == "eggs"
+    assert FeatureTogglesRepository.get(feature_toggle.id).type == "godsend"
   end
 
   test "returns single feature toggle", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
+    feature_toggle = insert(:feature_toggle)
 
-    response = conn |> get(feature_toggles_path(conn, :show, record.id)) |> json_response(:ok)
+    response =
+      conn |> get(feature_toggles_path(conn, :show, feature_toggle.id)) |> json_response(:ok)
 
     assert response == %{
-             "id" => record.id,
-             "env" => "prod",
+             "id" => feature_toggle.id,
+             "env" => "bacon",
              "external_id" => "spam",
-             "active" => true,
+             "status" => "eggs",
              "type" => "simple",
              "label" => "Spam",
              "feature_toggle_rules" => []
@@ -99,16 +101,17 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
   end
 
   test "returns single feature toggle with its rules", %{conn: conn} do
-    {:ok, record} = FeatureTogglesRepository.save(@feature_toggle)
-    FeatureTogglesRepository.add_rule(record.id, %{:threshold => 0.25})
+    feature_toggle = insert(:feature_toggle)
+    FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.25})
 
-    response = conn |> get(feature_toggles_path(conn, :show, record.id)) |> json_response(:ok)
+    response =
+      conn |> get(feature_toggles_path(conn, :show, feature_toggle.id)) |> json_response(:ok)
 
     assert response == %{
-             "id" => record.id,
-             "env" => "prod",
+             "id" => feature_toggle.id,
+             "env" => "bacon",
              "external_id" => "spam",
-             "active" => true,
+             "status" => "eggs",
              "type" => "simple",
              "label" => "Spam",
              "feature_toggle_rules" => [
@@ -116,7 +119,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
                  "attribute_name" => nil,
                  "attribute_operation" => nil,
                  "attribute_value" => nil,
-                 "feature_toggle_id" => record.id,
+                 "feature_toggle_id" => feature_toggle.id,
                  "threshold" => 0.25,
                  "type" => "simple"
                }
