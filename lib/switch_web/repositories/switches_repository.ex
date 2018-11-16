@@ -1,4 +1,6 @@
 defmodule SwitchWeb.SwitchesRepository do
+  import Ecto.Query
+
   alias Switch.Repo
   alias SwitchWeb.Switch
 
@@ -9,6 +11,11 @@ defmodule SwitchWeb.SwitchesRepository do
 
   def list do
     Repo.all(Switch)
+  end
+
+  def list(user_id) do
+    from(s in Switch, where: s.user_id == ^user_id)
+    |> Repo.all()
   end
 
   def delete(id) do
