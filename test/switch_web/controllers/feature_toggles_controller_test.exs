@@ -16,11 +16,12 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     expected = [
       %{
         "external_id" => feature_toggle.external_id,
-        "status" => feature_toggle.status,
+        "active" => feature_toggle.active,
         "env" => feature_toggle.env,
         "type" => feature_toggle.type,
         "feature_toggle_rules" => [],
-        "id" => feature_toggle.id
+        "id" => feature_toggle.id,
+        "label" => feature_toggle.label
       }
     ]
 
@@ -78,7 +79,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     |> json_response(:ok)
 
     assert FeatureTogglesRepository.get(feature_toggle.id).env == "test"
-    assert FeatureTogglesRepository.get(feature_toggle.id).status == "rotten"
+    assert FeatureTogglesRepository.get(feature_toggle.id).active == false
     assert FeatureTogglesRepository.get(feature_toggle.id).external_id == "eggs"
     assert FeatureTogglesRepository.get(feature_toggle.id).type == "godsend"
   end
@@ -93,7 +94,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "id" => feature_toggle.id,
              "env" => "bacon",
              "external_id" => "spam",
-             "status" => "eggs",
+             "active" => true,
              "type" => "simple",
              "label" => "Spam",
              "feature_toggle_rules" => []
@@ -111,7 +112,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "id" => feature_toggle.id,
              "env" => "bacon",
              "external_id" => "spam",
-             "status" => "eggs",
+             "active" => true,
              "type" => "simple",
              "label" => "Spam",
              "feature_toggle_rules" => [

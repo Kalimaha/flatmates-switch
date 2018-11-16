@@ -267,7 +267,5 @@ ALTER TABLE ONLY public.switches
 -- PostgreSQL database dump complete
 --
 
-<<<<<<< HEAD
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115222609);
-=======
->>>>>>> Switch model
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115031452), (20181115222609);
+

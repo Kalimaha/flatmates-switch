@@ -29,9 +29,9 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
 
   test "updates an existing record in the DB" do
     feature_toggle = insert(:feature_toggle)
-    FeatureTogglesRepository.update(feature_toggle.id, %{:status => "bacon", :env => "prod"})
+    FeatureTogglesRepository.update(feature_toggle.id, %{:active => false, :env => "prod"})
 
-    assert FeatureTogglesRepository.get(feature_toggle.id).status == "bacon"
+    assert FeatureTogglesRepository.get(feature_toggle.id).active == false
     assert FeatureTogglesRepository.get(feature_toggle.id).env == "prod"
   end
 
