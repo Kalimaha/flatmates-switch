@@ -12,6 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
+import { getRequestToggles, deleteRequestToggle } from "./actions";
 import StyledFormContainer from "../FormContainer";
 
 const styles = theme => ({
@@ -35,6 +36,14 @@ class AppContainer extends PureComponent {
     checked: ["listingflow"],
   };
 
+  componentDidMount = () => {
+    const { dataFetched } = this.props;
+    console.log(dataFetched);
+    if (!dataFetched) {
+      this.props.getRequestToggles();
+    }
+  };
+
   handleToggle = value => () => {
     const { checked } = this.state;
     const currentIndex = checked.indexOf(value);
@@ -51,6 +60,10 @@ class AppContainer extends PureComponent {
     });
   };
 
+  deleteToggle = id => {
+    this.props.deleteRequestToggle(id);
+  };
+
   handleClickOpen = () => {
     this.setState({
       open: true,
@@ -61,9 +74,32 @@ class AppContainer extends PureComponent {
     this.setState({ selectedValue: value, open: false });
   };
 
+  renderToggles = () => {
+    const { classes, featureToggles } = this.props;
+    return featureToggles.map(item => (
+      <ListItem className={classes.listItemStyle}>
+        <ListItemText primary={item.label} />
+        <ListItemSecondaryAction>
+          <Switch
+            onChange={this.handleToggle(item.id)}
+            checked={this.state.checked.indexOf(item.id) !== -1}
+          />
+          <IconButton
+            className={classes.button}
+            onClick={() => this.deleteToggle(item.id)}
+            aria-label="Delete"
+            color="primary"
+          >
+            <DeleteIcon />
+          </IconButton>
+        </ListItemSecondaryAction>
+      </ListItem>
+    ));
+  };
+
   render() {
     const { classes } = this.props;
-
+    const toggleList = this.renderToggles();
     return (
       <div>
         <List
@@ -81,31 +117,7 @@ class AppContainer extends PureComponent {
             </ListSubheader>
           }
         >
-          <ListItem className={classes.listItemStyle}>
-            <ListItemText primary="Listing Flows" />
-            <ListItemSecondaryAction>
-              <Switch
-                onChange={this.handleToggle("listingflow")}
-                checked={this.state.checked.indexOf("listingflow") !== -1}
-              />
-              <IconButton className={classes.button} aria-label="Delete" color="primary">
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
-
-          <ListItem>
-            <ListItemText primary="Inspections" />
-            <ListItemSecondaryAction>
-              <Switch
-                onChange={this.handleToggle("inspections")}
-                checked={this.state.checked.indexOf("inspections") !== -1}
-              />
-              <IconButton className={classes.button} aria-label="Delete" color="primary">
-                <DeleteIcon />
-              </IconButton>
-            </ListItemSecondaryAction>
-          </ListItem>
+          {toggleList}
         </List>
         <StyledFormContainer
           selectedValue={this.state.selectedValue}
@@ -120,16 +132,19 @@ class AppContainer extends PureComponent {
 function mapStateToProps(state) {
   // whatever is returned will show up as props
   return {
-    state,
+    featureToggles: state.appContainerReducer.featureToggles,
+    dataFetched: state.appContainerReducer.dataFetched,
   };
 }
 
-// Anything returned from this function will end up as props
-function mapDispatchToProps(dispatch) {
-  // Whenever dispatch is called the result should be passed
-  // to all of the reducers
-  return bindActionCreators({}, dispatch);
-}
+const mapDispatchToProps = dispatch =>
+  bindActionCreators(
+    {
+      getRequestToggles,
+      deleteRequestToggle,
+    },
+    dispatch
+  );
 
 const StyledAppContainer = withStyles(styles)(AppContainer);
 // To promote a component to a container (smart component) - it needs

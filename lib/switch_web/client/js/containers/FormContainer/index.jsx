@@ -14,6 +14,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Slide from "@material-ui/core/Slide";
+import { postRequestToggles } from "./actions";
 
 const styles = theme => ({
   root: {
@@ -44,15 +45,22 @@ function Transition(props) {
 
 class FormContainer extends PureComponent {
   state = {
-    externalId: "",
+    EXTERNAL_ID: "",
+    LABEL: "",
+    ENV: "",
   };
 
   handleClose = () => {
     this.props.onClose(this.props.selectedValue);
   };
 
-  handleChange = event => {
-    this.setState({ name: event.target.value });
+  handleChange = (event, label) => {
+    this.setState({ [label]: event.target.value });
+  };
+
+  handleSave = event => {
+    this.props.postRequestToggles(this.state.LABEL, this.state.EXTERNAL_ID, this.state.ENV);
+    this.handleClose();
   };
 
   renderAddForm = () => {
@@ -67,30 +75,35 @@ class FormContainer extends PureComponent {
         <DialogTitle id="simple-dialog-title">Add Toggle</DialogTitle>
         <DialogContent>
           <FormControl className={classes.formControl}>
+            <InputLabel htmlFor="input-external-label">Label</InputLabel>
+            <Input
+              id="input-label"
+              value={this.state.label}
+              onChange={event => this.handleChange(event, "LABEL")}
+            />
+            <FormHelperText id="input-label-helper-text">What is this flag for?</FormHelperText>
+          </FormControl>
+          <FormControl className={classes.formControl}>
             <InputLabel htmlFor="input-external-id">External ID</InputLabel>
-            <Input id="input-external-id" value={this.state.id} onChange={this.handleChange} />
+            <Input
+              id="input-external-id"
+              value={this.state.id}
+              onChange={event => this.handleChange(event, "EXTERNAL_ID")}
+            />
             <FormHelperText id="input-external-helper-text">External ID to be sent</FormHelperText>
           </FormControl>
           <FormControl className={classes.formControl}>
             <InputLabel htmlFor="input-env">Environment</InputLabel>
-            <Input id="input-env" value={this.state.env} onChange={this.handleChange} />
+            <Input
+              id="input-env"
+              value={this.state.env}
+              onChange={event => this.handleChange(event, "ENV")}
+            />
             <FormHelperText id="input-env-helper-text">Test, Staging, Prod</FormHelperText>
           </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="input-active">Active</InputLabel>
-            <Input id="input-active" value={this.state.active} onChange={this.handleChange} />
-          </FormControl>
-          <FormControl className={classes.formControl}>
-            <InputLabel htmlFor="input-type">Type</InputLabel>
-            <Input id="input-type" value={this.state.type} onChange={this.handleChange} />
-            <FormHelperText id="input-type-helper-text">
-              "simple", "attributes_based", "godsend", "attributes_based_godsend"
-            </FormHelperText>
-          </FormControl>
         </DialogContent>
-
         <DialogActions>
-          <Button onClick={this.saveToggle} color="primary">
+          <Button onClick={this.handleSave} color="primary">
             Add new
           </Button>
         </DialogActions>
@@ -116,7 +129,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   // Whenever dispatch is called the result should be passed
   // to all of the reducers
-  return bindActionCreators({}, dispatch);
+  return bindActionCreators({ postRequestToggles }, dispatch);
 }
 
 const StyledFormContainer = withStyles(styles)(FormContainer);
