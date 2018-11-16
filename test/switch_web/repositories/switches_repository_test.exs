@@ -50,4 +50,12 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
 
     assert length(SwitchesRepository.list()) == 0
   end
+
+  test "find switches by user" do
+    user = insert(:user)
+    switch = insert(:switch, user_id: user.id)
+    switches = SwitchesRepository.list(user.id)
+
+    assert Enum.map(switches, &(&1.id)) == [switch.id]
+  end
 end
