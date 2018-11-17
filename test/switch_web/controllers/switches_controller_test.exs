@@ -37,7 +37,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
   end
 
   test "creates a switch and an user if it does not exist in the DB already", %{conn: conn} do
-    feature_toggle = insert(:feature_toggle)
+    feature_toggle = insert(:feature_toggle, active: true)
 
     payload = %{
       :user_id => "user_123",
@@ -58,7 +58,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
              "feature_toggle_env" => "dev",
              "feature_toggle_name" => "spam",
              "user_source" => "a_nice_system",
-             "value" => false
+             "value" => true
            }
   end
 

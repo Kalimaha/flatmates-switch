@@ -10,24 +10,24 @@ defmodule SwitchWeb.SwitchesService do
 
     unless feature_toggle == nil do
       {:ok, user} = get_or_create_user(user_id, user_source)
-      get_or_create_switch(user, feature_toggle.external_id, feature_toggle.env)
+      get_or_create_switch(user, feature_toggle)
     else
       {:error, "Feature toggle '#{feature_toggle_name}' (#{feature_toggle_env}) does not exist."}
     end
   end
 
-  defp get_or_create_switch(user, feature_toggle_name, feature_toggle_env) do
+  defp get_or_create_switch(user, feature_toggle) do
     existing_switch =
       SwitchesRepository.find_by(
         user.external_id,
         user.source,
-        feature_toggle_name,
-        feature_toggle_env
+        feature_toggle.external_id,
+        feature_toggle.env
       )
 
     case existing_switch do
       nil ->
-        SwitchesRepository.save(switch_payload(user, feature_toggle_name, feature_toggle_env))
+        SwitchesRepository.save(switch_payload(user, feature_toggle))
 
       _ ->
         {:ok, existing_switch}
@@ -43,13 +43,13 @@ defmodule SwitchWeb.SwitchesService do
     end
   end
 
-  defp switch_payload(user, feature_toggle_name, feature_toggle_env) do
+  defp switch_payload(user, feature_toggle) do
     %{
       :user_id => user.external_id,
       :user_source => user.source,
-      :feature_toggle_name => feature_toggle_name,
-      :feature_toggle_env => feature_toggle_env,
-      :value => false
+      :feature_toggle_name => feature_toggle.external_id,
+      :feature_toggle_env => feature_toggle.env,
+      :value => feature_toggle.active
     }
   end
 end
