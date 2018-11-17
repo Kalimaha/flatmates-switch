@@ -36,7 +36,7 @@ defmodule Switch.Mixfile do
       {:cowboy, "~> 1.0"},
       {:plug_cowboy, "~> 1.0"},
       {:excoveralls, github: "parroty/excoveralls"},
-      {:ex_machina, "~> 2.2", only: :test}
+      {:ex_machina, "~> 2.2", only: [:test, :dev]}
     ]
   end
 
@@ -48,6 +48,7 @@ defmodule Switch.Mixfile do
       "db.create": ["ecto.create", "ecto.dump"],
       "db.migrate": ["ecto.migrate", "ecto.dump"],
       "db.rollback": ["ecto.rollback", "ecto.dump"],
+      "db.seed": ["run priv/repo/seeds.exs"],
       test: ["ecto.create --quiet", "ecto.migrate", "test"]
     ]
   end
