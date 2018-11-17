@@ -1,4 +1,6 @@
 defmodule SwitchWeb.UsersRepository do
+  import Ecto.Query
+
   alias Switch.Repo
   alias SwitchWeb.User
 
@@ -25,5 +27,11 @@ defmodule SwitchWeb.UsersRepository do
 
     User.changeset(record, new_params)
     |> Repo.update()
+  end
+
+  def find_by_external_id_and_source(user_id, user_source) do
+    from(u in User, where: u.external_id == ^user_id and u.source == ^user_source)
+
+    |> Repo.one()
   end
 end
