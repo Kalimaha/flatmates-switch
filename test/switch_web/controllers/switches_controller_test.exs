@@ -62,6 +62,22 @@ defmodule SwitchWeb.SwitchesControllerTest do
            }
   end
 
+  test "attempt to get a switch for a toggle that does not exist", %{conn: conn} do
+    payload = %{
+      :user_id => "user_123",
+      :user_source => "a_nice_system",
+      :feature_toggle_name => "non_existing_toggle",
+      :feature_toggle_env => "prod"
+    }
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:bad_request)
+
+    assert response == "Feature toggle 'non_existing_toggle' (prod) does not exist."
+  end
+
   test "attempts to call the endpoint with wrong params", %{conn: conn} do
     payload = %{:hallo => "world"}
 

@@ -9,15 +9,15 @@ defmodule SwitchWeb.SwitchesController do
         "feature_toggle_name" => feature_toggle_name,
         "feature_toggle_env" => feature_toggle_env
       }) do
-    switch =
-      SwitchesService.get_or_create(
-        user_id,
-        user_source,
-        feature_toggle_name,
-        feature_toggle_env
-      )
-
-    conn |> put_status(:ok) |> json(switch)
+    case SwitchesService.get_or_create(
+           user_id,
+           user_source,
+           feature_toggle_name,
+           feature_toggle_env
+         ) do
+      {:ok, switch} -> conn |> put_status(:ok) |> json(switch)
+      {:error, message} -> conn |> put_status(:bad_request) |> json(message)
+    end
   end
 
   def get_or_create(conn, _params) do

@@ -1,11 +1,19 @@
 defmodule SwitchWeb.SwitchesService do
-  alias SwitchWeb.{SwitchesRepository, UsersRepository}
+  alias SwitchWeb.{SwitchesRepository, UsersRepository, FeatureTogglesRepository}
 
   def get_or_create(user_id, user_source, feature_toggle_name, feature_toggle_env) do
-    {:ok, user} = get_or_create_user(user_id, user_source)
-    {:ok, switch} = get_or_create_switch(user, feature_toggle_name, feature_toggle_env)
+    feature_toggle =
+      FeatureTogglesRepository.find_by_external_id_and_env(
+        feature_toggle_name,
+        feature_toggle_env
+      )
 
-    switch
+    unless feature_toggle == nil do
+      {:ok, user} = get_or_create_user(user_id, user_source)
+      get_or_create_switch(user, feature_toggle.external_id, feature_toggle.env)
+    else
+      {:error, "Feature toggle '#{feature_toggle_name}' (#{feature_toggle_env}) does not exist."}
+    end
   end
 
   defp get_or_create_switch(user, feature_toggle_name, feature_toggle_env) do
