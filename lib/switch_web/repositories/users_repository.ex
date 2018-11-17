@@ -31,7 +31,6 @@ defmodule SwitchWeb.UsersRepository do
 
   def find_by_external_id_and_source(user_id, user_source) do
     from(u in User, where: u.external_id == ^user_id and u.source == ^user_source)
-
     |> Repo.one()
   end
 end

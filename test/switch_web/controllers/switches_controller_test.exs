@@ -2,7 +2,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
   use SwitchWeb.ConnCase
   import Switch.Factory
 
-  alias SwitchWeb.UsersRepository
+  alias SwitchWeb.{UsersRepository, SwitchesRepository}
 
   test "returns an existing switch", %{conn: conn} do
     user = insert(:user)
@@ -36,28 +36,40 @@ defmodule SwitchWeb.SwitchesControllerTest do
            }
   end
 
-  test "creates the user if it does not exist in the DB already", %{conn: conn} do
+  test "creates a switch and an user if it does not exist in the DB already", %{conn: conn} do
     feature_toggle = insert(:feature_toggle)
 
-    switch =
-      insert(:switch,
-        user_id: "user_123",
-        user_source: "a_nice_system",
-        feature_toggle_name: feature_toggle.external_id,
-        feature_toggle_env: feature_toggle.env
-      )
-
     payload = %{
-      :user_id => switch.user_id,
-      :user_source => switch.user_source,
-      :feature_toggle_name => switch.feature_toggle_name,
-      :feature_toggle_env => switch.feature_toggle_env
+      :user_id => "user_123",
+      :user_source => "a_nice_system",
+      :feature_toggle_name => feature_toggle.external_id,
+      :feature_toggle_env => feature_toggle.env
     }
 
-    conn
-    |> get(switches_path(conn, :get_or_create), payload)
-    |> json_response(:ok)
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:ok)
 
     assert length(UsersRepository.list()) == 1
+    assert length(SwitchesRepository.list()) == 1
+
+    assert response == %{
+             "feature_toggle_env" => "bacon",
+             "feature_toggle_name" => "spam",
+             "user_source" => "a_nice_system",
+             "value" => false
+           }
+  end
+
+  test "attempts to call the endpoint with wrong params", %{conn: conn} do
+    payload = %{:hallo => "world"}
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:bad_request)
+
+    assert response == "bad_request"
   end
 end
