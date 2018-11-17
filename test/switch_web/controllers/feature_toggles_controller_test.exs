@@ -92,7 +92,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
     assert response == %{
              "id" => feature_toggle.id,
-             "env" => "bacon",
+             "env" => "dev",
              "external_id" => "spam",
              "active" => true,
              "type" => "simple",
@@ -110,7 +110,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
     assert response == %{
              "id" => feature_toggle.id,
-             "env" => "bacon",
+             "env" => "dev",
              "external_id" => "spam",
              "active" => true,
              "type" => "simple",

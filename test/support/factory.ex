@@ -9,7 +9,7 @@ defmodule Switch.Factory do
     %SwitchWeb.FeatureToggle{
       :external_id => "spam",
       :active => true,
-      :env => "bacon",
+      :env => "dev",
       :type => "simple",
       :label => "Spam"
     }

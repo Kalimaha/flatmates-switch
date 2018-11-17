@@ -13,6 +13,8 @@ defmodule SwitchWeb.FeatureToggleRule do
              :threshold
            ]}
 
+  @valid_types ["simple", "godsend", "attributes_based", "godsend_attributes_based"]
+
   schema "feature_toggle_rules" do
     field(:attribute_name, :string)
     field(:type, :string)
@@ -35,6 +37,7 @@ defmodule SwitchWeb.FeatureToggleRule do
       :threshold
     ])
     |> validate_required([:feature_toggle_id, :type])
+    |> validate_inclusion(:type, @valid_types)
     |> validate_required_fields(attrs)
     |> validate_number(:threshold, less_than_or_equal_to: 1.0, greater_than_or_equal_to: 0.0)
   end

@@ -3,7 +3,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
   import Switch.Factory
 
   alias Switch.Repo
-  alias SwitchWeb.{Switch, SwitchesRepository, UsersRepository}
+  alias SwitchWeb.{Switch, SwitchesRepository}
 
   test "save new content in the DB" do
     SwitchesRepository.save(params_for(:switch))

@@ -65,4 +65,16 @@ defmodule SwitchWeb.FeatureToggleTest do
 
     refute changeset.valid?
   end
+
+  test "validates env" do
+    changeset =
+      FeatureToggle.changeset(%FeatureToggle{}, %{
+        :external_id => "spam_and_eggs",
+        :active => true,
+        :env => "pippo",
+        :type => "unknown_type"
+      })
+
+    assert changeset.errors[:env] == {"is invalid", [validation: :inclusion]}
+  end
 end
