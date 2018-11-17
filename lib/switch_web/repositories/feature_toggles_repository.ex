@@ -1,4 +1,6 @@
 defmodule SwitchWeb.FeatureTogglesRepository do
+  import Ecto.Query
+
   alias Switch.Repo
   alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureToggleRulesRepository}
 
@@ -74,5 +76,13 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     else
       {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
     end
+  end
+
+  def find_by_external_id_and_env(external_id, env) do
+    from(
+      f in FeatureToggle,
+      where: f.external_id == ^external_id and f.env == ^env
+    )
+    |> Repo.one()
   end
 end

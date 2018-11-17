@@ -1,31 +1,22 @@
 defmodule SwitchWeb.FeatureToggleRulesRepositoryTest do
   use Switch.DataCase
+  import Switch.Factory
 
   alias Switch.Repo
   alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository, FeatureToggleRule}
 
-  @feature_toggle %{
-    :external_id => "spam",
-    :active => true,
-    :env => "bacon",
-    :type => "simple",
-    :label => "Spam"
-  }
-
   test "gets a single rule" do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-    {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.42})
+    feature_toggle = insert(:feature_toggle)
 
-    assert FeatureToggleRulesRepository.get(rule.id).threshold == 0.42
+    {:ok, rule} =
+      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+
+    assert FeatureToggleRulesRepository.get(rule.id).type == "simple"
   end
 
   test "save new content in the DB" do
-    {:ok, feature_toggle} = FeatureTogglesRepository.save(@feature_toggle)
-
-    FeatureToggleRulesRepository.save(%{
-      :feature_toggle_id => feature_toggle.id,
-      :type => "simple"
-    })
+    feature_toggle = insert(:feature_toggle)
+    insert(:feature_toggle_rule, feature_toggle_id: feature_toggle.id)
 
     assert length(Repo.all(FeatureToggleRule)) == 1
   end

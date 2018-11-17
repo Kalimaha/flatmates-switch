@@ -1,9 +1,8 @@
 defmodule SwitchWeb.UsersControllerTest do
   use SwitchWeb.ConnCase
+  import Switch.Factory
 
   alias SwitchWeb.{User, UsersRepository}
-
-  @user %{external_id: "spam", source: "flatmates"}
 
   test "returns an empty array when there are no users available", %{conn: conn} do
     response = conn |> get(users_path(conn, :index)) |> json_response(:ok)
@@ -12,10 +11,10 @@ defmodule SwitchWeb.UsersControllerTest do
   end
 
   test "returns all the available users", %{conn: conn} do
-    {:ok, record} = UsersRepository.save(@user)
+    user = insert(:user)
 
     expected = [
-      %{"external_id" => record.external_id, "id" => record.id, "source" => "flatmates"}
+      %{"external_id" => user.external_id, "id" => user.id, "source" => "flatmates"}
     ]
 
     response = conn |> get(users_path(conn, :index)) |> json_response(:ok)
@@ -25,43 +24,43 @@ defmodule SwitchWeb.UsersControllerTest do
 
   test "inserts a new record in the DB", %{conn: conn} do
     conn
-    |> post(users_path(conn, :create, @user), @user)
+    |> post(users_path(conn, :create, params_for(:user)), params_for(:user))
     |> json_response(:created)
 
     assert length(UsersRepository.list()) == 1
   end
 
   test "deletes record from the DB", %{conn: conn} do
-    {:ok, record} = UsersRepository.save(@user)
+    user = insert(:user)
 
     conn
-    |> delete(users_path(conn, :delete, %User{id: record.id}))
+    |> delete(users_path(conn, :delete, %User{id: user.id}))
     |> json_response(:ok)
 
     assert length(UsersRepository.list()) == 0
   end
 
   test "updates existing records in the DB", %{conn: conn} do
-    {:ok, record} = UsersRepository.save(@user)
+    user = insert(:user)
 
     conn
-    |> put(users_path(conn, :update, record.id), %{
+    |> put(users_path(conn, :update, user.id), %{
       :external_id => "eggs",
       :source => "test"
     })
     |> json_response(:ok)
 
-    assert UsersRepository.get(record.id).external_id == "eggs"
-    assert UsersRepository.get(record.id).source == "test"
+    assert UsersRepository.get(user.id).external_id == "eggs"
+    assert UsersRepository.get(user.id).source == "test"
   end
 
   test "returns single user", %{conn: conn} do
-    {:ok, record} = UsersRepository.save(@user)
+    user = insert(:user)
 
-    response = conn |> get(users_path(conn, :show, record.id)) |> json_response(:ok)
+    response = conn |> get(users_path(conn, :show, user.id)) |> json_response(:ok)
 
     assert response == %{
-             "id" => record.id,
+             "id" => user.id,
              "external_id" => "spam",
              "source" => "flatmates"
            }

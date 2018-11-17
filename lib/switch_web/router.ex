@@ -21,6 +21,8 @@ defmodule SwitchWeb.Router do
     resources("/feature-toggles", FeatureTogglesController) do
       resources("/rules", FeatureToggleRulesController)
     end
+
+    get("/switches", SwitchesController, :get_or_create)
   end
 
   scope "/", SwitchWeb do
