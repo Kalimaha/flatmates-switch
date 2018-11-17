@@ -2,41 +2,22 @@ defmodule SwitchWeb.SwitchesControllerTest do
   use SwitchWeb.ConnCase
   import Switch.Factory
 
-  alias SwitchWeb.{SwitchesRepository, SwitchesRepository}
+  alias SwitchWeb.SwitchesRepository
 
-  @tag :skip
-  test "returns an empty array when there are no switches available", %{conn: conn} do
-    response =
-      conn
-      |> get(users_switches_path(conn, :index, 1))
-      |> json_response(:ok)
-
-    assert response == []
-  end
-
-  @tag :skip
-  test "returns available switches", %{conn: conn} do
-    user = insert(:user)
-    switch = insert(:switch, user_id: user.id)
+  test "returns an existing switch", %{conn: conn} do
+    switch = insert(:switch)
+    payload = params_for(:switch)
 
     response =
       conn
-      |> get(users_switches_path(conn, :index, user.id))
+      |> post(switches_path(conn, :get_or_create), payload)
       |> json_response(:ok)
 
-    assert response == [%{"feature_toggle_name" => "spam", "user_id" => user.id, "value" => true}]
-  end
-
-  @tag :skip
-  test "attempt to fetch available switches for non-existent user", %{conn: conn} do
-    user = insert(:user)
-    switch = insert(:switch, user_id: user.id)
-
-    response =
-      conn
-      |> get(users_switches_path(conn, :index, 42))
-      |> json_response(:ok)
-
-    assert response == []
+    assert response == %{
+             "feature_toggle_env" => "prod",
+             "feature_toggle_name" => "spam",
+             "user_source" => "flatmates",
+             "value" => true
+           }
   end
 end
