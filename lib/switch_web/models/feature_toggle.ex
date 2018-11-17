@@ -6,6 +6,7 @@ defmodule SwitchWeb.FeatureToggle do
   @derive {Poison.Encoder,
            only: [:id, :external_id, :env, :active, :type, :feature_toggle_rules, :label]}
 
+  @valid_envs ["test", "prod", "dev"]
   @valid_types ["simple", "attributes_based", "godsend", "attributes_based_godsend"]
 
   schema "feature_toggles" do
@@ -24,5 +25,6 @@ defmodule SwitchWeb.FeatureToggle do
     |> cast(attrs, [:external_id, :env, :active, :type, :label])
     |> validate_required([:external_id, :env, :active, :type, :label])
     |> validate_inclusion(:type, @valid_types)
+    |> validate_inclusion(:env, @valid_envs)
   end
 end

@@ -29,7 +29,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
       |> json_response(:ok)
 
     assert response == %{
-             "feature_toggle_env" => "bacon",
+             "feature_toggle_env" => "dev",
              "feature_toggle_name" => "spam",
              "user_source" => "flatmates",
              "value" => true
@@ -55,7 +55,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
     assert length(SwitchesRepository.list()) == 1
 
     assert response == %{
-             "feature_toggle_env" => "bacon",
+             "feature_toggle_env" => "dev",
              "feature_toggle_name" => "spam",
              "user_source" => "a_nice_system",
              "value" => false
