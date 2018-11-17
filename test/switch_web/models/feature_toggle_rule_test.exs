@@ -6,6 +6,16 @@ defmodule SwitchWeb.FeatureToggleRuleTest do
   @valid_attributes %{:feature_toggle_id => 42, :type => "simple"}
   @invalid_attributes %{:feature_toggle_id => nil, :type => "simple"}
 
+  test "validates type" do
+    changeset =
+      FeatureToggleRule.changeset(%FeatureToggleRule{}, %{
+        :feature_toggle_id => 42,
+        :type => "pippo"
+      })
+
+    assert changeset.errors[:type] == {"is invalid", [validation: :inclusion]}
+  end
+
   test "changeset with valid attributes" do
     assert FeatureToggleRule.changeset(%FeatureToggleRule{}, @valid_attributes).valid?
   end
