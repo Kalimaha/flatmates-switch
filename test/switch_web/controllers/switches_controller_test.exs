@@ -10,7 +10,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
     response =
       conn
-      |> post(switches_path(conn, :get_or_create), payload)
+      |> get(switches_path(conn, :get_or_create), payload)
       |> json_response(:ok)
 
     assert response == %{

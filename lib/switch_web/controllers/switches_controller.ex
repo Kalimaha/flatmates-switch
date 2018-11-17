@@ -1,11 +1,11 @@
 defmodule SwitchWeb.SwitchesController do
   use SwitchWeb, :controller
 
-  alias SwitchWeb.SwitchesRepository
+  alias SwitchWeb.SwitchesService
 
   def get_or_create(conn, params) do
     switch =
-      SwitchesRepository.find_by(
+      SwitchesService.get_or_create(
         params["user_id"],
         params["user_source"],
         params["feature_toggle_name"],

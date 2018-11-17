@@ -22,7 +22,7 @@ defmodule SwitchWeb.Router do
       resources("/rules", FeatureToggleRulesController)
     end
 
-    post("/switches", SwitchesController, :get_or_create)
+    get("/switches", SwitchesController, :get_or_create)
   end
 
   scope "/", SwitchWeb do
