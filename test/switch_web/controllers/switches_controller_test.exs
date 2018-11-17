@@ -4,6 +4,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
   alias SwitchWeb.{SwitchesRepository, SwitchesRepository}
 
+  @tag :skip
   test "returns an empty array when there are no switches available", %{conn: conn} do
     response =
       conn
@@ -13,6 +14,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
     assert response == []
   end
 
+  @tag :skip
   test "returns available switches", %{conn: conn} do
     user = insert(:user)
     switch = insert(:switch, user_id: user.id)
@@ -25,6 +27,7 @@ defmodule SwitchWeb.SwitchesControllerTest do
     assert response == [%{"feature_toggle_name" => "spam", "user_id" => user.id, "value" => true}]
   end
 
+  @tag :skip
   test "attempt to fetch available switches for non-existent user", %{conn: conn} do
     user = insert(:user)
     switch = insert(:switch, user_id: user.id)

@@ -3,11 +3,20 @@ defmodule SwitchWeb.Switch do
   import Ecto.Changeset
   alias SwitchWeb.Switch
 
-  @derive {Poison.Encoder, only: [:user_id, :feature_toggle_name, :value]}
+  @derive {Poison.Encoder,
+           only: [
+             :user_external_id,
+             :user_source,
+             :feature_toggle_name,
+             :feature_toggle_env,
+             :value
+           ]}
 
   schema "switches" do
-    field(:user_id, :id)
+    field(:user_id, :string, source: :user_external_id)
+    field(:user_source, :string)
     field(:feature_toggle_name, :string)
+    field(:feature_toggle_env, :string)
     field(:value, :boolean)
 
     timestamps()
@@ -15,7 +24,7 @@ defmodule SwitchWeb.Switch do
 
   def changeset(%Switch{} = struct, attrs) do
     struct
-    |> cast(attrs, [:user_id, :feature_toggle_name, :value])
+    |> cast(attrs, [:user_id, :user_source, :feature_toggle_name, :feature_toggle_env, :value])
     |> validate_required([:user_id])
   end
 end

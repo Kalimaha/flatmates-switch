@@ -13,11 +13,6 @@ defmodule SwitchWeb.SwitchesRepository do
     Repo.all(Switch)
   end
 
-  def list(user_id) do
-    from(s in Switch, where: s.user_id == ^user_id)
-    |> Repo.all()
-  end
-
   def delete(id) do
     get(id)
     |> Repo.delete()

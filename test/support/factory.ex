@@ -20,6 +20,12 @@ defmodule Switch.Factory do
   end
 
   def switch_factory do
-    %SwitchWeb.Switch{:feature_toggle_name => "spam", :value => true}
+    %SwitchWeb.Switch{
+      :feature_toggle_name => "spam",
+      :feature_toggle_env => "prod",
+      :user_id => "F42",
+      :user_source => "flatmates",
+      :value => true
+    }
   end
 end
