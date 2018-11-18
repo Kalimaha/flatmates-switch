@@ -30,8 +30,13 @@ defmodule SwitchWeb.SwitchesService do
         SwitchesRepository.save(switch_payload(user, feature_toggle))
 
       _ ->
-        {:ok, existing_switch}
+        update_existing_switch(existing_switch, feature_toggle)
     end
+  end
+
+  defp update_existing_switch(existing_switch, feature_toggle) do
+    updated_switch = %SwitchWeb.Switch{existing_switch | value: feature_toggle.active}
+    {:ok, updated_switch}
   end
 
   defp get_or_create_user(user_id, user_source) do
