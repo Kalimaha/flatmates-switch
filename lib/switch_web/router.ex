@@ -2,6 +2,7 @@ defmodule SwitchWeb.Router do
   use SwitchWeb, :router
 
   pipeline :api do
+    plug CORSPlug, origin: "*"
     plug(:accepts, ["json"])
   end
 
