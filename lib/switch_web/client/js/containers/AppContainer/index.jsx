@@ -60,8 +60,8 @@ class AppContainer extends PureComponent {
     });
   };
 
-  deleteToggle = id => {
-    this.props.deleteRequestToggle(id);
+  deleteToggle = (id, externalId) => {
+    this.props.deleteRequestToggle(id, externalId);
   };
 
   handleClickOpen = () => {
@@ -86,7 +86,7 @@ class AppContainer extends PureComponent {
           />
           <IconButton
             className={classes.button}
-            onClick={() => this.deleteToggle(item.id)}
+            onClick={() => this.deleteToggle(item.id, item.external_id)}
             aria-label="Delete"
             color="primary"
           >
