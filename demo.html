@@ -10,7 +10,8 @@
     <script>
       function setBackgroundColor() {
         var env = "dev";
-        var url = `http://localhost:4000/api/switches?user_id=guido&user_source=flatmates&feature_toggle_name=toggle_1&feature_toggle_env=${env}`;
+        var feature_toggle_name = "toggle_1"
+        var url = `http://localhost:4000/api/switches?user_id=guido&user_source=flatmates&feature_toggle_name=${feature_toggle_name}&feature_toggle_env=${env}`;
         $.ajax({
           url: url,
           success: function(data, status) {

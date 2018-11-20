@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import { bindActionCreators } from "redux";
-import { getRequestToggles, deleteRequestToggle } from "./actions";
+import { getRequestToggles, deleteRequestToggle, patchRequestToggle } from "./actions";
 import StyledFormContainer from "../FormContainer";
 
 const styles = theme => ({
@@ -33,7 +33,7 @@ const styles = theme => ({
 class AppContainer extends PureComponent {
   state = {
     open: false,
-    checked: ["listingflow"],
+    checked: ["status"],
   };
 
   componentDidMount = () => {
@@ -50,8 +50,10 @@ class AppContainer extends PureComponent {
     const newChecked = [...checked];
 
     if (currentIndex === -1) {
+      this.props.patchRequestToggle(value, true)
       newChecked.push(value);
     } else {
+      this.props.patchRequestToggle(value, false)
       newChecked.splice(currentIndex, 1);
     }
 
@@ -142,6 +144,7 @@ const mapDispatchToProps = dispatch =>
     {
       getRequestToggles,
       deleteRequestToggle,
+      patchRequestToggle,
     },
     dispatch
   );
