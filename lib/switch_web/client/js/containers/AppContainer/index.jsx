@@ -80,7 +80,7 @@ class AppContainer extends PureComponent {
     const { classes, featureToggles } = this.props;
     return featureToggles.map(item => (
       <ListItem className={classes.listItemStyle}>
-        <ListItemText primary={item.label} />
+        <ListItemText primary={`${item.label} (${item.env})`} />
         <ListItemSecondaryAction>
           <Switch
             onChange={this.handleToggle(item.id)}
