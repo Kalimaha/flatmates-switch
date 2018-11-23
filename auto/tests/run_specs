@@ -1,0 +1,6 @@
+#!/bin/sh -e
+
+mix deps.get
+mix db.create
+mix db.migrate
+mix test

@@ -1,0 +1,11 @@
+#!/bin/bash -eu
+cd "$(dirname $0)/.."
+IMAGE_NAME=registry.cowbell.realestate.com.au/flatmates/flatmates-switch
+TAG=${BUILDKITE_BUILD_NUMBER-$TAG}
+# Try to pull the current latest image to use for cache, if it's there
+docker pull "$IMAGE_NAME:latest" || true
+docker build -t "$IMAGE_NAME:$TAG" --cache-from "$IMAGE_NAME:latest" .
+docker push "$IMAGE_NAME:$TAG"
+# push the new image back as "latest" so the next build can use it as cache
+docker tag "$IMAGE_NAME:$TAG" "$IMAGE_NAME:latest"
+docker push "$IMAGE_NAME:latest"
