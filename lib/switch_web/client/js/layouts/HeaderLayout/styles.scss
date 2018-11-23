@@ -4,7 +4,7 @@
   .header {
     overflow: auto;
     clear: both;
-    padding: 0;
+    padding: $grid_gutter 0;
     .l-pg--width {
       border-bottom: 1px solid $border_color;
       margin-bottom: $grid_gutter;
@@ -14,6 +14,17 @@
       overflow: hidden;
       margin: 0 0 $grid_gutter 0;
       padding-top: $grid_gutter/2;
+    }
+  }
+  .heading {
+    float: left;
+  }
+  .logo {
+    float: right;
+    display: inline-block;
+    padding: $grid_gutter/2;
+    img {
+      max-width: 420px;
     }
   }
 }

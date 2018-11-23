@@ -38,7 +38,7 @@
   },
   "rules": {
     "semi": [2, "never"],
-    "comma-dangle": [2, "always-multiline"],
+    "comma-dangle": ["error", "double", "always-multiline", { "avoidEscape": true }],
     "max-len": ["error", 120, 2],
     "id-length": 0,
     "new-cap": [2, { "capIsNewExceptions": ["AND"] }],

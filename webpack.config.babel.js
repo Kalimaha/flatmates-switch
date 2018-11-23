@@ -24,11 +24,11 @@ const config = (env, argv) => ({
     inline: true,
     hot: true,
     stats: "errors-only",
-    port: 9000,
+    port: 4001,
   },
   output: {
     path: path.resolve(__dirname, "priv/static"),
-    publicPath: "/priv/static/",
+    publicPath: "/",
     pathinfo: argv.mode === "development",
     filename: "js/[name].js?[hash:8]",
     chunkFilename: "js/[name].js?[hash:8][chunkhash:8]",
@@ -43,7 +43,7 @@ const config = (env, argv) => ({
       path.resolve(__dirname, "lib/switch_web/client"),
       path.resolve(__dirname, "lib/switch_web/client/js"),
       path.resolve(__dirname, "lib/switch_web/client/scss"),
-      path.resolve(__dirname, "lib/switch_web/client/img"),
+      path.resolve(__dirname, "lib/switch_web/client/images"),
       path.resolve(__dirname, "node_modules"),
     ],
     extensions: [".js", ".jsx"],
@@ -105,7 +105,7 @@ const config = (env, argv) => ({
           {
             loader: "file-loader",
             options: {
-              name: "img/[name].[ext]",
+              name: "images/[name].[ext]",
             },
           },
         ],
