@@ -3,7 +3,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
 
   alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository}
 
-  def index(conn, params) do
+  def index(%{assigns: %{version: :v1}} = conn, params) do
     feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
 
     case feature_toggle do
@@ -12,7 +12,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
     end
   end
 
-  def show(conn, params) do
+  def show(%{assigns: %{version: :v1}} = conn, params) do
     feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
     feature_toggle_rule = FeatureToggleRulesRepository.get(params["id"])
 
@@ -23,7 +23,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
     end
   end
 
-  def delete(conn, params) do
+  def delete(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, _} <-
            FeatureTogglesRepository.remove_rule(params["feature_toggles_id"], params["id"]) do
       feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
@@ -34,7 +34,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
     end
   end
 
-  def create(conn, params) do
+  def create(%{assigns: %{version: :v1}} = conn, params) do
     feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
 
     unless feature_toggle == nil do
@@ -50,7 +50,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
     end
   end
 
-  def update(conn, params) do
+  def update(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, rule} <-
            FeatureTogglesRepository.update_rule(
              params["feature_toggles_id"],
