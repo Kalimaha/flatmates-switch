@@ -7,7 +7,7 @@ defmodule SwitchWeb.Switch do
            only: [
              :user_external_id,
              :user_source,
-             :feature_id,
+             :feature_toggle,
              :value
            ]}
 
@@ -23,6 +23,6 @@ defmodule SwitchWeb.Switch do
   def changeset(%Switch{} = struct, attrs) do
     struct
     |> cast(attrs, [:feature_toggle_id, :user_id, :user_source, :value])
-    |> validate_required([:user_id])
+    |> validate_required([:feature_toggle_id, :user_id])
   end
 end

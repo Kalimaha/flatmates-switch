@@ -29,7 +29,16 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
     assert response == %{
              "user_source" => "flatmates",
-             "value" => true
+             "value" => true,
+             "feature_toggle" => %{
+               "active" => true,
+               "env" => "dev",
+               "external_id" => "spam",
+               "feature_toggle_rules" => [],
+               "id" => feature_toggle.id,
+               "label" => "Spam",
+               "type" => "simple"
+             }
            }
   end
 
@@ -53,7 +62,16 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
     assert response == %{
              "user_source" => "a_nice_system",
-             "value" => true
+             "value" => true,
+             "feature_toggle" => %{
+               "active" => true,
+               "env" => "dev",
+               "external_id" => "spam",
+               "feature_toggle_rules" => [],
+               "id" => feature_toggle.id,
+               "label" => "Spam",
+               "type" => "simple"
+             }
            }
   end
 

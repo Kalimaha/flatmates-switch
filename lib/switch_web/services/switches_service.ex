@@ -52,8 +52,7 @@ defmodule SwitchWeb.SwitchesService do
     %{
       :user_id => user.external_id,
       :user_source => user.source,
-      :feature_toggle_name => feature_toggle.external_id,
-      :feature_toggle_env => feature_toggle.env,
+      :feature_toggle_id => feature_toggle.id,
       :value => feature_toggle.active
     }
   end
