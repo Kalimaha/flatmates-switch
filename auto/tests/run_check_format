@@ -1,0 +1,4 @@
+#!/bin/sh -e
+
+mix deps.get
+mix format --check-formatted

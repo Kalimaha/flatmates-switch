@@ -10,3 +10,8 @@ steps:
     command: 'auto/tests/specs'
     agents:
       queue: flatmates:deploy
+
+  - name: ':elixir: Check code format'
+    command: 'auto/tests/format'
+    agents:
+      queue: flatmates:deploy
