@@ -1,0 +1,194 @@
+steps:
+  - name: ':docker: Build Docker image for tests'
+    command: 'auto/build-image-for-test'
+    agents:
+      queue: muppets:build
+
+  - wait
+
+  - name: ':elixir: Run unit tests'
+    command: 'auto/tests/specs'
+    agents:
+      queue: flatmates:deploy
+
+  # - name: ':rea: Validate commit syntax'
+  #   command: 'auto/util/validate-commit-messages'
+  #   agents:
+  #     queue: muppets:build
+  #
+  # - name: ':brakeman: Run security checks'
+  #   command: 'auto/security_check'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':rubocop: Run Rubocop (only on changed Ruby files)'
+  #   command: 'auto/rubocop-only-changed'
+  #   agents:
+  #     queue: muppets:build
+  #
+  # - name: ':eslint: Run eslint (only on changed JS files)'
+  #   command: 'auto/eslint-only-changed'
+  #   agents:
+  #     queue: muppets:build
+  #
+  # - name: ':prettier: Run prettier'
+  #   command: 'auto/pretty-check'
+  #   agents:
+  #     queue: muppets:build
+  #
+  # - name: ':rspec: Run unit tests'
+  #   command: 'auto/tests/specs'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':rspec: Run job tests'
+  #   command: 'auto/tests/jobs'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':jest: Run JS tests'
+  #   command: 'auto/tests/js'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':rspec: Run controllers tests'
+  #   command: 'auto/tests/controllers'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':rspec: Run services tests'
+  #   command: 'auto/tests/services'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':cypress: Run integration tests'
+  #   command: 'auto/tests/integrations'
+  #   artifact_paths: './cypress_screenshots/**/*.png'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - name: ':docker: Build Docker image for deployment'
+  #   branches:
+  #     - master
+  #   command: 'auto/build-image-for-deployment'
+  #   agents:
+  #     queue: muppets:build
+  #
+  # - wait
+  #
+  # - name: ':amazon-rds: DB Schema Migration'
+  #   branches:
+  #     - master
+  #   command: 'auto/db_staging_schema_migration'
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - wait
+  #
+  # - name: ':aws-cloudformation: Deploy Web to Staging'
+  #   branches:
+  #     - master
+  #   command: 'auto/deploy/staging/web'
+  #   agents:
+  #     queue: flatmates:deploy
+  #   concurrency_group: flatmates-deploy-staging-web
+  #   concurrency: 1
+  #
+  # - name: ':aws-cloudformation: Deploy Workers to Staging'
+  #   branches:
+  #     - master
+  #   command: 'auto/deploy/staging/workers'
+  #   agents:
+  #     queue: flatmates:deploy
+  #   concurrency_group: flatmates-deploy-staging-workers
+  #   concurrency: 1
+  #
+  # - block: ":writing_hand: Deployment Checklist"
+  #   branches:
+  #     - master
+  #   prompt: "Have these sanity checks been performed?"
+  #   fields:
+  #     - text: "Rollback build number"
+  #       key: "rollback-build-number"
+  #       hint: "Last working deployed build number"
+  #       required: true
+  #     - select: "Account Creation Test"
+  #       key: "account-creation"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Account Login Test"
+  #       key: "account-login"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Property Creation Test"
+  #       key: "property-creation"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Person Creation Test"
+  #       key: "person-creation"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Upgrade Test"
+  #       key: "upgrade"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Message Person Test"
+  #       key: "message-person"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #     - select: "Message Property Test"
+  #       key: "message-property"
+  #       options:
+  #         - label: "Passed"
+  #           value: "Passed"
+  #       required: true
+  #
+  # - wait
+  #
+  # - name: ':amazon-rds: DB Schema Migration'
+  #   command: 'auto/db_prod_schema_migration'
+  #   branches:
+  #     - master
+  #   agents:
+  #     queue: flatmates:deploy
+  #
+  # - wait
+  #
+  # - name: ':amazon-rds: Deploy Web to Production'
+  #   branches:
+  #     - master
+  #   command: 'auto/deploy/production/web'
+  #   agents:
+  #     queue: flatmates:deploy
+  #   concurrency_group: flatmates-deploy-production-web
+  #   concurrency: 1
+  #
+  # - name: ':amazon-rds: Deploy Workers to Production'
+  #   branches:
+  #     - master
+  #   command: 'auto/deploy/production/workers'
+  #   agents:
+  #     queue: flatmates:deploy
+  #   concurrency_group: flatmates-deploy-production-workers
+  #   concurrency: 1
+  #
+  # - wait
+  #
+  # - name: ":slack: Deployment Slack Notification"
+  #   command: 'auto/slack_deployment_job'
+  #   branches:
+  #     - master
+  #   agents:
+  #     queue: muppets:build
