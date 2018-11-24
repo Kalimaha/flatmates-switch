@@ -40,4 +40,17 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
 
     assert length(SwitchesRepository.list()) == 0
   end
+
+  test "fetches related toggle" do
+    feature_toggle = insert(:feature_toggle)
+    switch = insert(:switch, feature_toggle_id: feature_toggle.id)
+
+    switch_feature_toggle = SwitchesRepository.get(switch.id).feature_toggle
+
+    assert switch_feature_toggle.env == feature_toggle.env
+    assert switch_feature_toggle.external_id == feature_toggle.external_id
+    assert switch_feature_toggle.label == feature_toggle.label
+    assert switch_feature_toggle.active == feature_toggle.active
+    assert switch_feature_toggle.type == feature_toggle.type
+  end
 end

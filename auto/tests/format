@@ -1,0 +1,3 @@
+#! /bin/sh -e
+
+TAG="${BUILDKITE_BUILD_NUMBER-$TAG}" docker-compose run test auto/tests/run_check_format

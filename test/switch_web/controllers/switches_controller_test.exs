@@ -12,15 +12,14 @@ defmodule SwitchWeb.SwitchesControllerTest do
       insert(:switch,
         user_id: user.external_id,
         user_source: user.source,
-        feature_toggle_name: feature_toggle.external_id,
-        feature_toggle_env: feature_toggle.env
+        feature_toggle_id: feature_toggle.id
       )
 
     payload = %{
       :user_id => switch.user_id,
       :user_source => switch.user_source,
-      :feature_toggle_name => switch.feature_toggle_name,
-      :feature_toggle_env => switch.feature_toggle_env
+      :feature_toggle_name => feature_toggle.external_id,
+      :feature_toggle_env => feature_toggle.env
     }
 
     response =
@@ -29,8 +28,6 @@ defmodule SwitchWeb.SwitchesControllerTest do
       |> json_response(:ok)
 
     assert response == %{
-             "feature_toggle_env" => "dev",
-             "feature_toggle_name" => "spam",
              "user_source" => "flatmates",
              "value" => true
            }
@@ -55,8 +52,6 @@ defmodule SwitchWeb.SwitchesControllerTest do
     assert length(SwitchesRepository.list()) == 1
 
     assert response == %{
-             "feature_toggle_env" => "dev",
-             "feature_toggle_name" => "spam",
              "user_source" => "a_nice_system",
              "value" => true
            }

@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.10
+-- Dumped from database version 9.6.11
 -- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
@@ -120,13 +120,12 @@ CREATE TABLE public.schema_migrations (
 
 CREATE TABLE public.switches (
     id bigint NOT NULL,
-    feature_toggle_name character varying(255),
     value boolean,
     inserted_at timestamp without time zone NOT NULL,
     updated_at timestamp without time zone NOT NULL,
     user_external_id character varying(255),
     user_source character varying(255),
-    feature_toggle_env character varying(255)
+    feature_toggle_id bigint
 );
 
 
@@ -258,8 +257,16 @@ ALTER TABLE ONLY public.feature_toggle_rules
 
 
 --
+-- Name: switches switches_feature_toggle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
+--
+
+ALTER TABLE ONLY public.switches
+    ADD CONSTRAINT switches_feature_toggle_id_fkey FOREIGN KEY (feature_toggle_id) REFERENCES public.feature_toggles(id);
+
+
+--
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115031452), (20181115222609), (20181117040000);
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115031452), (20181115222609), (20181117040000), (20181124040133);
 
