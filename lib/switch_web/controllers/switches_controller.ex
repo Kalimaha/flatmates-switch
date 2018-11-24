@@ -3,7 +3,7 @@ defmodule SwitchWeb.SwitchesController do
 
   alias SwitchWeb.SwitchesService
 
-  def get_or_create(conn, %{
+  def get_or_create(%{assigns: %{version: :v1}} = conn, %{
         "user_id" => user_id,
         "user_source" => user_source,
         "feature_toggle_name" => feature_toggle_name,

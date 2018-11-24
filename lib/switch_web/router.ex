@@ -1,9 +1,11 @@
 defmodule SwitchWeb.Router do
   use SwitchWeb, :router
+  alias SwitchWeb.APIVersion
 
-  pipeline :api do
+  pipeline :v1 do
     plug(CORSPlug, origin: "*")
     plug(:accepts, ["json"])
+    plug(APIVersion, version: :v1)
   end
 
   pipeline :browser do
@@ -14,8 +16,8 @@ defmodule SwitchWeb.Router do
     plug(:put_secure_browser_headers)
   end
 
-  scope "/api", SwitchWeb do
-    pipe_through(:api)
+  scope "/api/v1", SwitchWeb do
+    pipe_through(:v1)
 
     resources("/users", UsersController)
 

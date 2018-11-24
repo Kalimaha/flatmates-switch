@@ -3,7 +3,7 @@ defmodule SwitchWeb.FeatureTogglesController do
 
   alias SwitchWeb.{FeatureTogglesRepository, ErrorHelpers}
 
-  def index(conn, _params) do
+  def index(%{assigns: %{version: :v1}} = conn, _params) do
     feature_toggles = FeatureTogglesRepository.list()
 
     conn
@@ -11,7 +11,7 @@ defmodule SwitchWeb.FeatureTogglesController do
     |> json(feature_toggles)
   end
 
-  def show(conn, params) do
+  def show(%{assigns: %{version: :v1}} = conn, params) do
     feature_toggle = FeatureTogglesRepository.get(params["id"])
 
     unless feature_toggle == nil do
@@ -21,7 +21,7 @@ defmodule SwitchWeb.FeatureTogglesController do
     end
   end
 
-  def create(conn, params) do
+  def create(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, feature_toggle} <- FeatureTogglesRepository.save(params) do
       conn
       |> put_status(:created)
@@ -32,7 +32,7 @@ defmodule SwitchWeb.FeatureTogglesController do
     end
   end
 
-  def delete(conn, params) do
+  def delete(%{assigns: %{version: :v1}} = conn, params) do
     FeatureTogglesRepository.delete(params["id"])
 
     conn
@@ -40,7 +40,7 @@ defmodule SwitchWeb.FeatureTogglesController do
     |> json(:ok)
   end
 
-  def update(conn, params) do
+  def update(%{assigns: %{version: :v1}} = conn, params) do
     {:ok, feature_toggle} = FeatureTogglesRepository.update(params["id"], params)
 
     conn

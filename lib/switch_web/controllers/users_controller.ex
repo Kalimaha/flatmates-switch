@@ -3,7 +3,7 @@ defmodule SwitchWeb.UsersController do
 
   alias SwitchWeb.UsersRepository
 
-  def index(conn, _params) do
+  def index(%{assigns: %{version: :v1}} = conn, _params) do
     users = UsersRepository.list()
 
     conn
@@ -11,7 +11,7 @@ defmodule SwitchWeb.UsersController do
     |> json(users)
   end
 
-  def show(conn, params) do
+  def show(%{assigns: %{version: :v1}} = conn, params) do
     user = UsersRepository.get(params["id"])
 
     case user do
@@ -20,7 +20,7 @@ defmodule SwitchWeb.UsersController do
     end
   end
 
-  def create(conn, params) do
+  def create(%{assigns: %{version: :v1}} = conn, params) do
     {:ok, user} = UsersRepository.save(params)
 
     conn
@@ -28,7 +28,7 @@ defmodule SwitchWeb.UsersController do
     |> json(user)
   end
 
-  def delete(conn, params) do
+  def delete(%{assigns: %{version: :v1}} = conn, params) do
     UsersRepository.delete(params["id"])
 
     conn
@@ -36,7 +36,7 @@ defmodule SwitchWeb.UsersController do
     |> json(:ok)
   end
 
-  def update(conn, params) do
+  def update(%{assigns: %{version: :v1}} = conn, params) do
     {:ok, user} = UsersRepository.update(params["id"], params)
 
     conn
