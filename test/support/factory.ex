@@ -21,8 +21,6 @@ defmodule Switch.Factory do
 
   def switch_factory do
     %SwitchWeb.Switch{
-      :feature_toggle_name => "spam",
-      :feature_toggle_env => "prod",
       :user_id => "F42",
       :user_source => "flatmates",
       :value => true
