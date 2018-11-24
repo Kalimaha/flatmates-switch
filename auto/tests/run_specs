@@ -3,4 +3,4 @@
 mix deps.get
 mix db.create
 mix db.migrate
-mix test
+mix coveralls
