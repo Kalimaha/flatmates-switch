@@ -11,6 +11,12 @@ defmodule SwitchWeb.FeatureTogglesRepositoryTest do
     assert length(Repo.all(FeatureToggle)) == 1
   end
 
+  test "store JSON payload with the feature toggle" do
+    feature_toggle = insert(:feature_toggle, payload: %{:spam => "eggs"})
+
+    assert FeatureTogglesRepository.get(feature_toggle.id).payload == %{"spam" => "eggs"}
+  end
+
   test "assigns an ID to the record" do
     feature_toggle = insert(:feature_toggle)
 

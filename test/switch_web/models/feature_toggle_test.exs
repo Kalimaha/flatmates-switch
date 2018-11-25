@@ -77,4 +77,14 @@ defmodule SwitchWeb.FeatureToggleTest do
 
     assert changeset.errors[:env] == {"is invalid", [validation: :inclusion]}
   end
+
+  test "accepts a JSON payload" do
+    changeset =
+      FeatureToggle.changeset(
+        %FeatureToggle{},
+        params_for(:feature_toggle, payload: %{:spam => "eggs"})
+      )
+
+    assert changeset.valid?
+  end
 end

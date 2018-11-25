@@ -6,13 +6,17 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
   alias SwitchWeb.{Switch, SwitchesRepository}
 
   test "save new content in the DB" do
-    SwitchesRepository.save(params_for(:switch))
+    feature_toggle = insert(:feature_toggle)
+    SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     assert length(Repo.all(Switch)) == 1
   end
 
   test "assigns an ID to the record" do
-    {:ok, switch_record} = SwitchesRepository.save(params_for(:switch))
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, switch_record} =
+      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     refute switch_record.id == nil
   end
@@ -22,20 +26,29 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
   end
 
   test "returns all the available records in the DB" do
-    SwitchesRepository.save(params_for(:switch))
+    feature_toggle = insert(:feature_toggle)
+    SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     assert length(SwitchesRepository.list()) == 1
   end
 
   test "updates an existing record in the DB" do
-    {:ok, switch} = SwitchesRepository.save(params_for(:switch))
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, switch} =
+      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+
     SwitchesRepository.update(switch.id, %{:value => false})
 
     assert SwitchesRepository.get(switch.id).value == false
   end
 
   test "deletes an existing record in the DB" do
-    {:ok, switch} = SwitchesRepository.save(params_for(:switch))
+    feature_toggle = insert(:feature_toggle)
+
+    {:ok, switch} =
+      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+
     SwitchesRepository.delete(switch.id)
 
     assert length(SwitchesRepository.list()) == 0

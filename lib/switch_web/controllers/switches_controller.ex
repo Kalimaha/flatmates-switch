@@ -16,7 +16,9 @@ defmodule SwitchWeb.SwitchesController do
            feature_toggle_env
          ) do
       {:ok, switch} ->
-        conn |> put_status(:ok) |> json(Switch.Repo.preload(switch, :feature_toggle))
+        conn
+        |> put_status(:ok)
+        |> json(Switch.Repo.preload(switch, feature_toggle: :feature_toggle_rules))
 
       {:error, message} ->
         conn |> put_status(:bad_request) |> json(message)

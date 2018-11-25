@@ -16,11 +16,13 @@
           url: url,
           success: function(data, status) {
             if(data.value) {
-              document.body.style.backgroundColor = "#2F3A4A";
+              var color = data.payload.color;
+              document.body.style.backgroundColor = color;
               $("#env-wrapper").css("color", "#FFF");
               $("#welcome").css("color", "#FFF");
             }
-            $("#env").html(env);
+            $("#featureToggleLabel").html(data.label);
+            $("#activeFeatureToggle").html(data.value ? "active" : "not active");
           },
           error: function(a, b) {
             console.log(a);
@@ -42,7 +44,7 @@
       </div>
       <div class="row">
         <div class="col-sm" id="env-wrapper">
-          Environment: <b id="env"></b>
+          "<i id="featureToggleLabel"></i>" ➡️ <span id="activeFeatureToggle"></span>
         </div>
       </div>
     </div>
