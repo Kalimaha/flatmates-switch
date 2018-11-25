@@ -37,7 +37,8 @@ defmodule SwitchWeb.SwitchesControllerTest do
                "feature_toggle_rules" => [],
                "id" => feature_toggle.id,
                "label" => "Spam",
-               "type" => "simple"
+               "type" => "simple",
+               "payload" => %{}
              }
            }
   end
@@ -70,7 +71,8 @@ defmodule SwitchWeb.SwitchesControllerTest do
                "feature_toggle_rules" => [],
                "id" => feature_toggle.id,
                "label" => "Spam",
-               "type" => "simple"
+               "type" => "simple",
+               "payload" => %{}
              }
            }
   end

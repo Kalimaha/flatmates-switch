@@ -11,7 +11,7 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
   end
 
   test "returns all the available feature toggles", %{conn: conn} do
-    feature_toggle = insert(:feature_toggle)
+    feature_toggle = insert(:feature_toggle, payload: %{:spam => "eggs"})
 
     expected = [
       %{
@@ -21,7 +21,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
         "type" => feature_toggle.type,
         "feature_toggle_rules" => [],
         "id" => feature_toggle.id,
-        "label" => feature_toggle.label
+        "label" => feature_toggle.label,
+        "payload" => %{"spam" => "eggs"}
       }
     ]
 
@@ -97,7 +98,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
              "active" => true,
              "type" => "simple",
              "label" => "Spam",
-             "feature_toggle_rules" => []
+             "feature_toggle_rules" => [],
+             "payload" => %{}
            }
   end
 
@@ -124,7 +126,8 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
                  "threshold" => 0.25,
                  "type" => "simple"
                }
-             ]
+             ],
+             "payload" => %{}
            }
   end
 
