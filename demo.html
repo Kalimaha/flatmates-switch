@@ -16,13 +16,13 @@
           url: url,
           success: function(data, status) {
             if(data.value) {
-              var color = data.feature_toggle.payload.color;
+              var color = data.payload.color;
               document.body.style.backgroundColor = color;
               $("#env-wrapper").css("color", "#FFF");
               $("#welcome").css("color", "#FFF");
             }
-            $("#featureToggleLabel").html(data.feature_toggle.label);
-            $("#activeFeatureToggle").html(data.feature_toggle.active ? "active" : "not active");
+            $("#featureToggleLabel").html(data.label);
+            $("#activeFeatureToggle").html(data.value ? "active" : "not active");
           },
           error: function(a, b) {
             console.log(a);

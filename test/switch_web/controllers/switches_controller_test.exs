@@ -28,18 +28,15 @@ defmodule SwitchWeb.SwitchesControllerTest do
       |> json_response(:ok)
 
     assert response == %{
-             "user_source" => "flatmates",
+             "id" => feature_toggle.external_id,
+             "label" => feature_toggle.label,
              "value" => true,
-             "feature_toggle" => %{
-               "active" => true,
-               "env" => "dev",
-               "external_id" => "spam",
-               "feature_toggle_rules" => [],
-               "id" => feature_toggle.id,
-               "label" => "Spam",
-               "type" => "simple",
-               "payload" => %{}
-             }
+             "user_id" => user.external_id,
+             "user_source" => "flatmates",
+             "env" => "dev",
+             "rules" => [],
+             "type" => "simple",
+             "payload" => %{}
            }
   end
 
@@ -64,16 +61,13 @@ defmodule SwitchWeb.SwitchesControllerTest do
     assert response == %{
              "user_source" => "a_nice_system",
              "value" => true,
-             "feature_toggle" => %{
-               "active" => true,
-               "env" => "dev",
-               "external_id" => "spam",
-               "feature_toggle_rules" => [],
-               "id" => feature_toggle.id,
-               "label" => "Spam",
-               "type" => "simple",
-               "payload" => %{}
-             }
+             "env" => "dev",
+             "id" => "spam",
+             "label" => "Spam",
+             "payload" => %{},
+             "rules" => [],
+             "type" => "simple",
+             "user_id" => "user_123"
            }
   end
 
