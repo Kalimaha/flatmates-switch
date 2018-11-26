@@ -49,7 +49,8 @@ defmodule SwitchWeb.SwitchesService do
 
     case existing_switch do
       nil ->
-        SwitchesRepository.save(switch_payload(user, feature_toggle))
+        switch_payload(user, feature_toggle)
+        |> SwitchesRepository.save()
 
       _ ->
         update_existing_switch(existing_switch, feature_toggle)
@@ -75,7 +76,14 @@ defmodule SwitchWeb.SwitchesService do
       :user_id => user.external_id,
       :user_source => user.source,
       :feature_toggle_id => feature_toggle.id,
-      :value => feature_toggle.active
+      :value => calculate_switch_value(feature_toggle)
     }
+  end
+
+  defp calculate_switch_value(feature_toggle) do
+    case feature_toggle.type do
+      "simple" -> feature_toggle.active
+      _ -> false
+    end
   end
 end
