@@ -82,8 +82,15 @@ defmodule SwitchWeb.SwitchesService do
 
   defp calculate_switch_value(feature_toggle) do
     case feature_toggle.type do
-      "simple" -> feature_toggle.active
-      _ -> false
+      "simple" ->
+        feature_toggle.active
+
+      "godsend" ->
+        feature_toggle.active &&
+          List.first(feature_toggle.feature_toggle_rules).threshold >= Enum.random(0..100) / 100.0
+
+      _ ->
+        false
     end
   end
 end

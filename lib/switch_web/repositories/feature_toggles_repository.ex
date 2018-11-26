@@ -84,5 +84,6 @@ defmodule SwitchWeb.FeatureTogglesRepository do
       where: f.external_id == ^external_id and f.env == ^env
     )
     |> Repo.one()
+    |> Repo.preload(:feature_toggle_rules)
   end
 end
