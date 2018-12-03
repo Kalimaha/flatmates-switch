@@ -1,5 +1,4 @@
-[![Build Status](https://travis-ci.org/Kalimaha/switch.svg?branch=master)](https://travis-ci.org/Kalimaha/switch)
-[![Coverage Status](https://coveralls.io/repos/github/Kalimaha/switch/badge.svg?branch=master)](https://coveralls.io/github/Kalimaha/switch?branch=master)
+[![Build status](https://badge.buildkite.com/9b42047cbaa0218d9dc06b7234103e36e99be7b91c9b7d9f51.svg)](https://buildkite.com/rea/flatmates-switch)
 
 # Switch
 Feature toggles server.
