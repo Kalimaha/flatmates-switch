@@ -6,6 +6,16 @@ defmodule SwitchWeb.SwitchesController do
   def get_or_create(%{assigns: %{version: :v1}} = conn, %{
         "user_id" => user_id,
         "user_source" => user_source,
+        "feature_toggles" => feature_toggles
+      }) do
+    conn
+    |> put_status(:ok)
+    |> json(SwitchesService.get_or_create(user_id, user_source, feature_toggles))
+  end
+
+  def get_or_create(%{assigns: %{version: :v1}} = conn, %{
+        "user_id" => user_id,
+        "user_source" => user_source,
         "feature_toggle_name" => feature_toggle_name,
         "feature_toggle_env" => feature_toggle_env
       }) do

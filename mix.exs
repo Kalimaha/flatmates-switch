@@ -43,7 +43,8 @@ defmodule Switch.Mixfile do
       {:plug_cowboy, "~> 1.0"},
       {:excoveralls, github: "parroty/excoveralls"},
       {:ex_machina, "~> 2.2", only: [:test, :dev]},
-      {:cors_plug, "~> 1.5"}
+      {:cors_plug, "~> 1.5"},
+      {:flow, "~> 0.14"}
     ]
   end
 

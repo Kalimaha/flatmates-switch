@@ -4,6 +4,112 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
   alias SwitchWeb.{UsersRepository, SwitchesRepository}
 
+  test "multiple switches", %{conn: conn} do
+    user = insert(:user)
+    feature_toggle_1 = insert(:feature_toggle, external_id: "spam")
+    feature_toggle_2 = insert(:feature_toggle, external_id: "eggs", label: "Eggs")
+
+    insert(:switch,
+      user_id: user.external_id,
+      user_source: user.source,
+      feature_toggle_id: feature_toggle_1.id
+    )
+
+    payload = %{
+      :user_id => user.external_id,
+      :user_source => user.source,
+      :feature_toggles => [
+        %{
+          :feature_toggle_name => feature_toggle_1.external_id,
+          :feature_toggle_env => feature_toggle_1.env
+        },
+        %{
+          :feature_toggle_name => feature_toggle_2.external_id,
+          :feature_toggle_env => feature_toggle_2.env
+        }
+      ]
+    }
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:ok)
+
+    assert Enum.sort_by(response, & &1["id"]) == [
+             %{
+               "id" => feature_toggle_2.external_id,
+               "label" => feature_toggle_2.label,
+               "value" => true,
+               "user_id" => user.external_id,
+               "user_source" => "flatmates",
+               "env" => "dev",
+               "rules" => [],
+               "type" => "simple",
+               "payload" => %{}
+             },
+             %{
+               "id" => feature_toggle_1.external_id,
+               "label" => feature_toggle_1.label,
+               "value" => true,
+               "user_id" => user.external_id,
+               "user_source" => "flatmates",
+               "env" => "dev",
+               "rules" => [],
+               "type" => "simple",
+               "payload" => %{}
+             }
+           ]
+  end
+
+  test "multiple switches, with error", %{conn: conn} do
+    user = insert(:user)
+    feature_toggle_1 = insert(:feature_toggle, external_id: "spam")
+    feature_toggle_2 = insert(:feature_toggle, external_id: "eggs", label: "Eggs")
+
+    insert(:switch,
+      user_id: user.external_id,
+      user_source: user.source,
+      feature_toggle_id: feature_toggle_1.id
+    )
+
+    payload = %{
+      :user_id => user.external_id,
+      :user_source => user.source,
+      :feature_toggles => [
+        %{
+          :feature_toggle_name => "I_DO_NOT_EXIST",
+          :feature_toggle_env => feature_toggle_1.env
+        },
+        %{
+          :feature_toggle_name => feature_toggle_2.external_id,
+          :feature_toggle_env => feature_toggle_2.env
+        }
+      ]
+    }
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:ok)
+
+    assert Enum.sort_by(response, & &1["id"]) == [
+             %{
+               "error" => "Feature toggle 'I_DO_NOT_EXIST' (dev) does not exist."
+             },
+             %{
+               "id" => feature_toggle_2.external_id,
+               "label" => feature_toggle_2.label,
+               "value" => true,
+               "user_id" => user.external_id,
+               "user_source" => "flatmates",
+               "env" => "dev",
+               "rules" => [],
+               "type" => "simple",
+               "payload" => %{}
+             }
+           ]
+  end
+
   test "returns an existing switch", %{conn: conn} do
     user = insert(:user)
     feature_toggle = insert(:feature_toggle)
