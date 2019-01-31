@@ -8,23 +8,9 @@ defmodule SwitchWeb.SwitchesController do
         "user_source" => user_source,
         "feature_toggles" => feature_toggles
       }) do
-    out =
-      feature_toggles
-      |> Flow.from_enumerable()
-      |> Flow.map(
-        &SwitchesService.get_or_create(
-          user_id,
-          user_source,
-          &1["feature_toggle_name"],
-          &1["feature_toggle_env"]
-        )
-      )
-      |> Flow.reduce(fn -> [] end, fn value, acc -> [parse_result(value) | acc] end)
-      |> Enum.to_list()
-
     conn
     |> put_status(:ok)
-    |> json(out)
+    |> json(SwitchesService.get_or_create(user_id, user_source, feature_toggles))
   end
 
   def get_or_create(%{assigns: %{version: :v1}} = conn, %{
@@ -51,12 +37,5 @@ defmodule SwitchWeb.SwitchesController do
 
   def get_or_create(conn, _params) do
     conn |> put_status(:bad_request) |> json(:bad_request)
-  end
-
-  defp parse_result(result) do
-    case result do
-      {:ok, switch} -> Switch.Repo.preload(switch, feature_toggle: :feature_toggle_rules)
-      {:error, message} -> message
-    end
   end
 end
