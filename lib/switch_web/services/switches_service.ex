@@ -58,7 +58,11 @@ defmodule SwitchWeb.SwitchesService do
   end
 
   defp update_existing_switch(existing_switch, feature_toggle) do
-    updated_switch = %SwitchWeb.Switch{existing_switch | value: feature_toggle.active}
+    updated_switch = %SwitchWeb.Switch{
+      existing_switch
+      | value: feature_toggle.active && existing_switch.value
+    }
+
     {:ok, updated_switch}
   end
 
