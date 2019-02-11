@@ -22,6 +22,7 @@ defmodule Switch.Cache do
       def handle_call({:lookup, key}, _from, state) do
         %{ets_table_name: ets_table_name} = state
         cache_value = :ets.lookup(ets_table_name, key)
+
         case cache_value do
           [] -> {:reply, nil, state}
           _ -> {:reply, cache_value[key], state}
