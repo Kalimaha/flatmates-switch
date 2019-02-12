@@ -1,7 +1,7 @@
 defmodule SwitchWeb.UsersController do
   use SwitchWeb, :controller
 
-  alias SwitchWeb.UsersRepository
+  alias SwitchWeb.{UsersRepository, UsersCachedRepository}
 
   def index(%{assigns: %{version: :v1}} = conn, _params) do
     users = UsersRepository.list()
@@ -12,7 +12,7 @@ defmodule SwitchWeb.UsersController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, params) do
-    user = UsersRepository.get(params["id"])
+    user = UsersCachedRepository.get(params["id"])
 
     case user do
       nil -> conn |> put_status(:not_found) |> json(:not_found)

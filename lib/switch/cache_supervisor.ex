@@ -9,9 +9,11 @@ defmodule Switch.CacheSupervisor do
 
   def init(:ok) do
     children = [
-      worker(UsersCache, [[cache_name: :users_cache]]),
-      worker(SwitchesCache, [[cache_name: :switches_cache]]),
-      worker(FeatureTogglesCache, [[cache_name: :feature_toggles_cache]])
+      worker(UsersCache, [[name: UsersCache, cache_name: :users_cache]]),
+      worker(SwitchesCache, [[name: SwitchesCache, cache_name: :switches_cache]]),
+      worker(FeatureTogglesCache, [
+        [name: FeatureTogglesCache, cache_name: :feature_toggles_cache]
+      ])
     ]
 
     supervise(children, strategy: :one_for_one)

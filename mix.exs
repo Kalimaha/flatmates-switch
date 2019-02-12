@@ -45,7 +45,8 @@ defmodule Switch.Mixfile do
       {:ex_machina, "~> 2.2", only: [:test, :dev]},
       {:cors_plug, "~> 1.5"},
       {:flow, "~> 0.14"},
-      {:ex_parameterized, "~> 1.3.5"}
+      {:ex_parameterized, "~> 1.3.5"},
+      {:mock, "~> 0.3.0", only: :test}
     ]
   end
 
