@@ -38,3 +38,12 @@ To run tests, execute:
 ```
 docker-compose run test mix test
 ```
+
+# Features
+* Full REST API
+* Multiple types of feature toggles
+* Server side cache
+
+# TODO
+* Authentication
+* Authorization

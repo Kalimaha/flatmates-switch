@@ -1,5 +1,5 @@
 defmodule SwitchWeb.SwitchesService do
-  alias SwitchWeb.{SwitchesRepository, UsersRepository, FeatureTogglesRepository}
+  alias SwitchWeb.{SwitchesRepository, UsersRepository, UsersCachedRepository, FeatureTogglesRepository}
 
   def get_or_create(user_id, user_source, feature_toggles) do
     feature_toggles
