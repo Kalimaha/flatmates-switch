@@ -2,6 +2,7 @@ defmodule SwitchWeb.FeatureTogglesController do
   use SwitchWeb, :controller
 
   alias SwitchWeb.{FeatureTogglesRepository, ErrorHelpers}
+  alias Switch.{UsersCache, SwitchesCache, FeatureTogglesCache}
 
   def index(%{assigns: %{version: :v1}} = conn, _params) do
     feature_toggles = FeatureTogglesRepository.list()
