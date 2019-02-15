@@ -50,8 +50,8 @@ defmodule SwitchWeb.UsersControllerTest do
     })
     |> json_response(:ok)
 
-    assert UsersRepository.get(user.id).external_id == "eggs"
-    assert UsersRepository.get(user.id).source == "test"
+    assert UsersRepository.get(id: user.id).external_id == "eggs"
+    assert UsersRepository.get(id: user.id).source == "test"
   end
 
   test "returns single user", %{conn: conn} do

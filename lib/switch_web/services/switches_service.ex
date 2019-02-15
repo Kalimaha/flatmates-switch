@@ -1,5 +1,10 @@
 defmodule SwitchWeb.SwitchesService do
-  alias SwitchWeb.{SwitchesRepository, UsersRepository, FeatureTogglesRepository}
+  alias SwitchWeb.{
+    SwitchesRepository,
+    UsersRepository,
+    UsersCachedRepository,
+    FeatureTogglesRepository
+  }
 
   def get_or_create(user_id, user_source, feature_toggles) do
     feature_toggles
@@ -67,7 +72,7 @@ defmodule SwitchWeb.SwitchesService do
   end
 
   defp get_or_create_user(user_id, user_source) do
-    existing_user = UsersRepository.find_by_external_id_and_source(user_id, user_source)
+    existing_user = UsersCachedRepository.get(external_id: user_id, user_source: user_source)
 
     case existing_user do
       nil -> UsersRepository.save(%{external_id: user_id, source: user_source})

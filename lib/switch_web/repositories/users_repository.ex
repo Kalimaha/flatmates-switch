@@ -14,23 +14,23 @@ defmodule SwitchWeb.UsersRepository do
   end
 
   def delete(id) do
-    get(id)
+    get(id: id)
     |> Repo.delete()
   end
 
-  def get(id) do
-    Repo.get(User, id)
-  end
-
   def update(id, new_params) do
-    record = get(id)
+    record = get(id: id)
 
     User.changeset(record, new_params)
     |> Repo.update()
   end
 
-  def find_by_external_id_and_source(user_id, user_source) do
-    from(u in User, where: u.external_id == ^user_id and u.source == ^user_source)
+  def get(id: id) do
+    Repo.get(User, id)
+  end
+
+  def get(external_id: external_id, user_source: user_source) do
+    from(u in User, where: u.external_id == ^external_id and u.source == ^user_source)
     |> Repo.one()
   end
 end

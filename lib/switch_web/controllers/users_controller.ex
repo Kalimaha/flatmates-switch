@@ -12,7 +12,7 @@ defmodule SwitchWeb.UsersController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, params) do
-    user = UsersCachedRepository.get(params["id"])
+    user = UsersCachedRepository.get(id: params["id"])
 
     case user do
       nil -> conn |> put_status(:not_found) |> json(:not_found)
