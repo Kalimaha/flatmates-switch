@@ -7,6 +7,8 @@ defmodule SwitchWeb.FeatureTogglesController do
   def index(%{assigns: %{version: :v1}} = conn, _params) do
     feature_toggles = FeatureTogglesRepository.list()
 
+    IO.inspect(UsersCache.lookup(:spam))
+
     conn
     |> put_status(:ok)
     |> json(feature_toggles)

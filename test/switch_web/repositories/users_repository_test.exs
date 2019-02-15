@@ -31,7 +31,7 @@ defmodule SwitchWeb.UsersRepositoryTest do
     {:ok, record} = UsersRepository.save(params_for(:user))
     UsersRepository.update(record.id, %{:source => "rea"})
 
-    assert UsersRepository.get(record.id).source == "rea"
+    assert UsersRepository.get(id: record.id).source == "rea"
   end
 
   test "deletes an existing record in the DB" do
