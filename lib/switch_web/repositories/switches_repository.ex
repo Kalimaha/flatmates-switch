@@ -14,16 +14,16 @@ defmodule SwitchWeb.SwitchesRepository do
   end
 
   def delete(id) do
-    get(id)
+    get(id: id)
     |> Repo.delete()
   end
 
-  def get(id) do
+  def get(id: id) do
     Repo.get(Switch, id)
     |> Repo.preload(:feature_toggle)
   end
 
-  def find_by(user_id, user_source, feature_toggle_name, feature_toggle_env) do
+  def get(user_id: user_id, user_source: user_source, feature_toggle_name: feature_toggle_name, feature_toggle_env: feature_toggle_env) do
     from(
       s in Switch,
       join: ft in FeatureToggle,
@@ -35,7 +35,7 @@ defmodule SwitchWeb.SwitchesRepository do
   end
 
   def update(id, new_params) do
-    record = get(id)
+    record = get(id: id)
 
     Switch.changeset(record, new_params)
     |> Repo.update()

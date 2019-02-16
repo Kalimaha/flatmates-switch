@@ -40,7 +40,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
 
     SwitchesRepository.update(switch.id, %{:value => false})
 
-    assert SwitchesRepository.get(switch.id).value == false
+    assert SwitchesRepository.get(id: switch.id).value == false
   end
 
   test "deletes an existing record in the DB" do
@@ -58,7 +58,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
     feature_toggle = insert(:feature_toggle)
     switch = insert(:switch, feature_toggle_id: feature_toggle.id)
 
-    switch_feature_toggle = SwitchesRepository.get(switch.id).feature_toggle
+    switch_feature_toggle = SwitchesRepository.get(id: switch.id).feature_toggle
 
     assert switch_feature_toggle.env == feature_toggle.env
     assert switch_feature_toggle.external_id == feature_toggle.external_id
