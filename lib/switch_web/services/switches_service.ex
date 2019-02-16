@@ -6,22 +6,22 @@ defmodule SwitchWeb.SwitchesService do
     FeatureTogglesRepository
   }
 
-  def get_or_create(user_id, user_source, feature_toggles) do
+  def get_or_create(user_external_id: user_external_id, user_source: user_source, feature_toggles: feature_toggles) do
     feature_toggles
     |> Flow.from_enumerable()
     |> Flow.map(
       &get_or_create(
-        user_id,
-        user_source,
-        &1["feature_toggle_name"],
-        &1["feature_toggle_env"]
+        user_external_id: user_external_id,
+        user_source: user_source,
+        feature_toggle_name: &1["feature_toggle_name"],
+        feature_toggle_env: &1["feature_toggle_env"]
       )
     )
     |> Flow.reduce(fn -> [] end, fn value, acc -> [parse_result(value) | acc] end)
     |> Enum.to_list()
   end
 
-  def get_or_create(user_id, user_source, feature_toggle_name, feature_toggle_env) do
+  def get_or_create(user_external_id: user_external_id, user_source: user_source, feature_toggle_name: feature_toggle_name, feature_toggle_env: feature_toggle_env) do
     feature_toggle =
       FeatureTogglesRepository.find_by_external_id_and_env(
         feature_toggle_name,
@@ -29,7 +29,7 @@ defmodule SwitchWeb.SwitchesService do
       )
 
     unless feature_toggle == nil do
-      {:ok, user} = get_or_create_user(user_id, user_source)
+      {:ok, user} = get_or_create_user(user_external_id, user_source)
       get_or_create_switch(user, feature_toggle)
     else
       {:error, "Feature toggle '#{feature_toggle_name}' (#{feature_toggle_env}) does not exist."}

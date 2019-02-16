@@ -26,10 +26,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
                      {:ok, switch} =
                        SwitchesService.get_or_create(
-                         user.external_id,
-                         user.source,
-                         feature_toggle.external_id,
-                         feature_toggle.env
+                         user_external_id: user.external_id,
+                         user_source: user.source,
+                         feature_toggle_name: feature_toggle.external_id,
+                         feature_toggle_env: feature_toggle.env
                        )
 
                      assert switch.value == expected
@@ -49,10 +49,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == true
@@ -65,10 +65,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == false
@@ -82,10 +82,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == false
@@ -99,10 +99,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == true
