@@ -75,7 +75,7 @@ defmodule SwitchWeb.SwitchesService do
     existing_user = UsersCachedRepository.get(external_id: user_id, user_source: user_source)
 
     case existing_user do
-      nil -> UsersRepository.save(%{external_id: user_id, source: user_source})
+      nil -> UsersRepository.save(user: %{external_id: user_id, source: user_source})
       _ -> {:ok, existing_user}
     end
   end

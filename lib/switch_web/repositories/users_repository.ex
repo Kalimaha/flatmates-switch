@@ -4,7 +4,7 @@ defmodule SwitchWeb.UsersRepository do
   alias Switch.Repo
   alias SwitchWeb.User
 
-  def save(user) do
+  def save(user: user) do
     User.changeset(%User{}, user)
     |> Repo.insert()
   end
@@ -13,12 +13,12 @@ defmodule SwitchWeb.UsersRepository do
     Repo.all(User)
   end
 
-  def delete(id) do
+  def delete(id: id) do
     get(id: id)
     |> Repo.delete()
   end
 
-  def update(id, new_params) do
+  def update(id: id, new_params: new_params) do
     record = get(id: id)
 
     User.changeset(record, new_params)
