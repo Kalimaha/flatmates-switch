@@ -46,7 +46,7 @@ defmodule SwitchWeb.SwitchesService do
   defp get_or_create_switch(user, feature_toggle) do
     existing_switch =
       SwitchesRepository.get(
-        user_id: user.external_id,
+        user_external_id: user.external_id,
         user_source: user.source,
         feature_toggle_name: feature_toggle.external_id,
         feature_toggle_env: feature_toggle.env
