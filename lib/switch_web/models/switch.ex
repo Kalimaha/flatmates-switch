@@ -15,7 +15,7 @@ defmodule SwitchWeb.Switch do
   def changeset(%Switch{} = struct, attrs) do
     struct
     |> cast(attrs, [:feature_toggle_id, :user_id, :user_source, :value])
-    |> validate_required([:feature_toggle_id, :user_id])
+    |> validate_required([:feature_toggle_id])
   end
 
   defimpl Poison.Encoder, for: Switch do
