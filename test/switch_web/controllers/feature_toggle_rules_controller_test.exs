@@ -117,7 +117,7 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureToggleRulesRepository.save(%{
+      FeatureToggleRulesRepository.save(feature_toggle_rule: %{
         :feature_toggle_id => feature_toggle.id,
         :type => "simple"
       })

@@ -47,7 +47,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     feature_toggle = get(feature_toggle_id)
 
     unless feature_toggle == nil do
-      feature_toggle_rule = FeatureToggleRulesRepository.get(feature_toggle_rule_id)
+      feature_toggle_rule = FeatureToggleRulesRepository.get(id: feature_toggle_rule_id)
 
       unless feature_toggle_rule == nil do
         feature_toggle_rule
@@ -65,7 +65,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     feature_toggle = get(feature_toggle_id)
 
     unless feature_toggle == nil do
-      feature_toggle_rule = FeatureToggleRulesRepository.get(feature_toggle_rule_id)
+      feature_toggle_rule = FeatureToggleRulesRepository.get(id: feature_toggle_rule_id)
 
       unless feature_toggle_rule == nil do
         feature_toggle_rule
