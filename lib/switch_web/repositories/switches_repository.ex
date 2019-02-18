@@ -23,13 +23,19 @@ defmodule SwitchWeb.SwitchesRepository do
     |> Repo.preload(:feature_toggle)
   end
 
-  def get(user_external_id: user_external_id, user_source: user_source, feature_toggle_name: feature_toggle_name, feature_toggle_env: feature_toggle_env) do
+  def get(
+        user_external_id: user_external_id,
+        user_source: user_source,
+        feature_toggle_name: feature_toggle_name,
+        feature_toggle_env: feature_toggle_env
+      ) do
     from(
       s in Switch,
       join: ft in FeatureToggle,
       where:
-        s.user_id == ^user_external_id and s.feature_toggle_id == ft.id and s.user_source == ^user_source and
-          ft.external_id == ^feature_toggle_name and ft.env == ^feature_toggle_env
+        s.user_id == ^user_external_id and s.feature_toggle_id == ft.id and
+          s.user_source == ^user_source and ft.external_id == ^feature_toggle_name and
+          ft.env == ^feature_toggle_env
     )
     |> Repo.one()
   end

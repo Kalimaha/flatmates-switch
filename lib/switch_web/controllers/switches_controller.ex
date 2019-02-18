@@ -10,7 +10,13 @@ defmodule SwitchWeb.SwitchesController do
       }) do
     conn
     |> put_status(:ok)
-    |> json(SwitchesService.get_or_create(user_external_id: user_id, user_source: user_source, feature_toggles: feature_toggles))
+    |> json(
+      SwitchesService.get_or_create(
+        user_external_id: user_id,
+        user_source: user_source,
+        feature_toggles: feature_toggles
+      )
+    )
   end
 
   def get_or_create(%{assigns: %{version: :v1}} = conn, %{

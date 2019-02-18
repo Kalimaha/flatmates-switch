@@ -6,7 +6,11 @@ defmodule SwitchWeb.SwitchesService do
     FeatureTogglesRepository
   }
 
-  def get_or_create(user_external_id: user_external_id, user_source: user_source, feature_toggles: feature_toggles) do
+  def get_or_create(
+        user_external_id: user_external_id,
+        user_source: user_source,
+        feature_toggles: feature_toggles
+      ) do
     feature_toggles
     |> Flow.from_enumerable()
     |> Flow.map(
@@ -21,11 +25,16 @@ defmodule SwitchWeb.SwitchesService do
     |> Enum.to_list()
   end
 
-  def get_or_create(user_external_id: user_external_id, user_source: user_source, feature_toggle_name: feature_toggle_name, feature_toggle_env: feature_toggle_env) do
+  def get_or_create(
+        user_external_id: user_external_id,
+        user_source: user_source,
+        feature_toggle_name: feature_toggle_name,
+        feature_toggle_env: feature_toggle_env
+      ) do
     feature_toggle =
       FeatureTogglesRepository.find_by_external_id_and_env(
-        feature_toggle_name,
-        feature_toggle_env
+        external_id: feature_toggle_name,
+        env: feature_toggle_env
       )
 
     unless feature_toggle == nil do

@@ -79,10 +79,10 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
     })
     |> json_response(:ok)
 
-    assert FeatureTogglesRepository.get(feature_toggle.id).env == "test"
-    assert FeatureTogglesRepository.get(feature_toggle.id).active == false
-    assert FeatureTogglesRepository.get(feature_toggle.id).external_id == "eggs"
-    assert FeatureTogglesRepository.get(feature_toggle.id).type == "godsend"
+    assert FeatureTogglesRepository.get(id: feature_toggle.id).env == "test"
+    assert FeatureTogglesRepository.get(id: feature_toggle.id).active == false
+    assert FeatureTogglesRepository.get(id: feature_toggle.id).external_id == "eggs"
+    assert FeatureTogglesRepository.get(id: feature_toggle.id).type == "godsend"
   end
 
   test "returns single feature toggle", %{conn: conn} do
@@ -105,7 +105,11 @@ defmodule SwitchWeb.FeatureTogglesControllerTest do
 
   test "returns single feature toggle with its rules", %{conn: conn} do
     feature_toggle = insert(:feature_toggle)
-    FeatureTogglesRepository.add_rule(feature_toggle.id, %{:threshold => 0.25})
+
+    FeatureTogglesRepository.add_rule(
+      feature_toggle_id: feature_toggle.id,
+      feature_toggle_rule_params: %{:threshold => 0.25}
+    )
 
     response =
       conn |> get(feature_toggles_path(conn, :show, feature_toggle.id)) |> json_response(:ok)

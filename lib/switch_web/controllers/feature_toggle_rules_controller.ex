@@ -4,7 +4,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository}
 
   def index(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
 
     case feature_toggle do
       nil -> conn |> put_status(:ok) |> json([])
@@ -13,7 +13,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
     feature_toggle_rule = FeatureToggleRulesRepository.get(id: params["id"])
 
     case {feature_toggle, feature_toggle_rule} do
@@ -25,8 +25,11 @@ defmodule SwitchWeb.FeatureToggleRulesController do
 
   def delete(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, _} <-
-           FeatureTogglesRepository.remove_rule(params["feature_toggles_id"], params["id"]) do
-      feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
+           FeatureTogglesRepository.remove_rule(
+             feature_toggle_id: params["feature_toggles_id"],
+             feature_toggle_rule_id: params["id"]
+           ) do
+      feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
 
       conn |> put_status(:ok) |> json(feature_toggle.feature_toggle_rules)
     else
@@ -35,10 +38,14 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   end
 
   def create(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
 
     unless feature_toggle == nil do
-      {:ok, rule} = FeatureTogglesRepository.add_rule(feature_toggle.id, params)
+      {:ok, rule} =
+        FeatureTogglesRepository.add_rule(
+          feature_toggle_id: feature_toggle.id,
+          feature_toggle_rule_params: params
+        )
 
       conn
       |> put_status(:created)
@@ -53,9 +60,9 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   def update(%{assigns: %{version: :v1}} = conn, params) do
     with {:ok, rule} <-
            FeatureTogglesRepository.update_rule(
-             params["feature_toggles_id"],
-             params["id"],
-             params
+             feature_toggle_id: params["feature_toggles_id"],
+             feature_toggle_rule_id: params["id"],
+             feature_toggle_rule_params: params
            ) do
       conn
       |> put_status(:ok)
