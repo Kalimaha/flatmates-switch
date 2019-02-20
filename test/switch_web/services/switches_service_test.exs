@@ -50,8 +50,6 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user_external_id: user.external_id,
-        user_source: user.source,
         feature_toggle_name: feature_toggle.external_id,
         feature_toggle_env: feature_toggle.env
       )
@@ -66,8 +64,6 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user_external_id: user.external_id,
-        user_source: user.source,
         feature_toggle_name: feature_toggle.external_id,
         feature_toggle_env: feature_toggle.env
       )

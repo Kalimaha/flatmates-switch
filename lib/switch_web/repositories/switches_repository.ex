@@ -40,6 +40,20 @@ defmodule SwitchWeb.SwitchesRepository do
     |> Repo.one()
   end
 
+  def get(
+        feature_toggle_name: feature_toggle_name,
+        feature_toggle_env: feature_toggle_env
+      ) do
+    from(
+      s in Switch,
+      join: ft in FeatureToggle,
+      where:
+        s.feature_toggle_id == ft.id and ft.external_id == ^feature_toggle_name and
+          ft.env == ^feature_toggle_env
+    )
+    |> Repo.one()
+  end
+
   def update(id: id, new_params: new_params) do
     record = get(id: id)
 
