@@ -16,7 +16,7 @@ defmodule SwitchWeb.SwitchesServiceTest do
                      feature_toggle = insert(:feature_toggle, active: feature_toggle_value)
 
                      SwitchesRepository.save(
-                       params_for(:switch,
+                       switch: params_for(:switch,
                          value: switch_value,
                          user_id: user.external_id,
                          user_source: user.source,

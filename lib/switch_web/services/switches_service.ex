@@ -63,8 +63,7 @@ defmodule SwitchWeb.SwitchesService do
 
     case existing_switch do
       nil ->
-        switch_payload(user, feature_toggle)
-        |> SwitchesRepository.save()
+        SwitchesRepository.save(switch: switch_payload(user, feature_toggle))
 
       _ ->
         update_existing_switch(existing_switch, feature_toggle)

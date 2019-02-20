@@ -4,7 +4,7 @@ defmodule SwitchWeb.SwitchesRepository do
   alias Switch.Repo
   alias SwitchWeb.{Switch, FeatureToggle}
 
-  def save(switch) do
+  def save(switch: switch) do
     Switch.changeset(%Switch{}, switch)
     |> Repo.insert()
   end
@@ -13,7 +13,7 @@ defmodule SwitchWeb.SwitchesRepository do
     Repo.all(Switch)
   end
 
-  def delete(id) do
+  def delete(id: id) do
     get(id: id)
     |> Repo.delete()
   end
@@ -40,7 +40,7 @@ defmodule SwitchWeb.SwitchesRepository do
     |> Repo.one()
   end
 
-  def update(id, new_params) do
+  def update(id: id, new_params: new_params) do
     record = get(id: id)
 
     Switch.changeset(record, new_params)
