@@ -32,7 +32,7 @@ defmodule SwitchWeb.SwitchesService do
         feature_toggle_env: feature_toggle_env
       ) do
     feature_toggle =
-      FeatureTogglesRepository.find_by_external_id_and_env(
+      FeatureTogglesRepository.get(
         external_id: feature_toggle_name,
         env: feature_toggle_env
       )
@@ -57,6 +57,22 @@ defmodule SwitchWeb.SwitchesService do
       SwitchesRepository.get(
         user_external_id: user.external_id,
         user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
+      )
+
+    case existing_switch do
+      nil ->
+        SwitchesRepository.save(switch: switch_payload(user, feature_toggle))
+
+      _ ->
+        update_existing_switch(existing_switch, feature_toggle)
+    end
+  end
+
+  defp get_or_create_switch(feature_toggle: feature_toggle) do
+    existing_switch =
+      SwitchesRepository.get(
         feature_toggle_name: feature_toggle.external_id,
         feature_toggle_env: feature_toggle.env
       )

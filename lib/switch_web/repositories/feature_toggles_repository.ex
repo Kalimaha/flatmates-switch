@@ -24,6 +24,15 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     |> Repo.preload(:feature_toggle_rules)
   end
 
+  def get(external_id: external_id, env: env) do
+    from(
+      f in FeatureToggle,
+      where: f.external_id == ^external_id and f.env == ^env
+    )
+    |> Repo.one()
+    |> Repo.preload(:feature_toggle_rules)
+  end
+
   def update(id: id, new_params: new_params) do
     record = get(id: id)
 
@@ -86,14 +95,5 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     else
       {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
     end
-  end
-
-  def find_by_external_id_and_env(external_id: external_id, env: env) do
-    from(
-      f in FeatureToggle,
-      where: f.external_id == ^external_id and f.env == ^env
-    )
-    |> Repo.one()
-    |> Repo.preload(:feature_toggle_rules)
   end
 end
