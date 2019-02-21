@@ -43,9 +43,28 @@ defmodule SwitchWeb.SwitchesServiceTest do
     ]
   end
 
-  test "creates a new switch based on a 'simple' feature toggle with the value set to false", %{
-    user: user
-  } do
+  test_with_params "fails to create a switch without a user for 'attributes_based' or 'attributes_based_godsend' feature toggles",
+                   fn type, expected ->
+                     feature_toggle = insert(:feature_toggle, active: true, type: type)
+
+                     {:error, message} =
+                       SwitchesService.get_or_create(
+                         feature_toggle_name: feature_toggle.external_id,
+                         feature_toggle_env: feature_toggle.env
+                       )
+
+                     assert message == expected
+                   end do
+    [
+      attributes_based:
+        {"attributes_based", "A user is required for 'attributes_based' feature toggles."},
+      attributes_based_godsend:
+        {"attributes_based_godsend",
+         "A user is required for 'attributes_based_godsend' feature toggles."}
+    ]
+  end
+
+  test "creates a new switch based on a 'simple' feature toggle with the value set to false" do
     feature_toggle = insert(:feature_toggle, active: true)
 
     {:ok, switch} =
@@ -57,9 +76,7 @@ defmodule SwitchWeb.SwitchesServiceTest do
     assert switch.value == true
   end
 
-  test "creates a new switch based on a 'simple' feature toggle with the value set to true", %{
-    user: user
-  } do
+  test "creates a new switch based on a 'simple' feature toggle with the value set to true" do
     feature_toggle = insert(:feature_toggle, active: false)
 
     {:ok, switch} =

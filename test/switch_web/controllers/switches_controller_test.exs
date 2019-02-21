@@ -203,4 +203,35 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
     assert response == "bad_request"
   end
+
+  test "creates a simple switch without an user if it does not exist in the DB already", %{
+    conn: conn
+  } do
+    feature_toggle = insert(:feature_toggle, active: true)
+
+    payload = %{
+      :feature_toggle_name => feature_toggle.external_id,
+      :feature_toggle_env => feature_toggle.env
+    }
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:ok)
+
+    assert length(UsersRepository.list()) == 0
+    assert length(SwitchesRepository.list()) == 1
+
+    assert response == %{
+             "user_source" => nil,
+             "value" => true,
+             "env" => "dev",
+             "id" => "spam",
+             "label" => "Spam",
+             "payload" => %{},
+             "rules" => [],
+             "type" => "simple",
+             "user_id" => nil
+           }
+  end
 end

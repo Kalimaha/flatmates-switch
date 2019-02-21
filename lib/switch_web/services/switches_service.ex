@@ -56,10 +56,18 @@ defmodule SwitchWeb.SwitchesService do
       )
 
     unless feature_toggle == nil do
-      get_or_create_switch(feature_toggle: feature_toggle)
+      if needs_attributes?(feature_toggle) do
+        {:error, "A user is required for '#{feature_toggle.type}' feature toggles."}
+      else
+        get_or_create_switch(feature_toggle: feature_toggle)
+      end
     else
       {:error, "Feature toggle '#{feature_toggle_name}' (#{feature_toggle_env}) does not exist."}
     end
+  end
+
+  defp needs_attributes?(feature_toggle) do
+    Enum.member?(["attributes_based", "attributes_based_godsend"], feature_toggle.type)
   end
 
   defp parse_result(result) do
