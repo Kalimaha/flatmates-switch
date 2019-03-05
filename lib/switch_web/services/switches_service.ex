@@ -3,7 +3,8 @@ defmodule SwitchWeb.SwitchesService do
     SwitchesRepository,
     UsersRepository,
     UsersCachedRepository,
-    FeatureTogglesRepository
+    FeatureTogglesRepository,
+    FeatureTogglesCachedRepository
   }
 
   def get_or_create(
@@ -32,7 +33,7 @@ defmodule SwitchWeb.SwitchesService do
         feature_toggle_env: feature_toggle_env
       ) do
     feature_toggle =
-      FeatureTogglesRepository.get(
+      FeatureTogglesCachedRepository.get(
         external_id: feature_toggle_name,
         env: feature_toggle_env
       )
@@ -50,7 +51,7 @@ defmodule SwitchWeb.SwitchesService do
         feature_toggle_env: feature_toggle_env
       ) do
     feature_toggle =
-      FeatureTogglesRepository.get(
+      FeatureTogglesCachedRepository.get(
         external_id: feature_toggle_name,
         env: feature_toggle_env
       )
