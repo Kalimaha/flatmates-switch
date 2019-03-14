@@ -1,13 +1,10 @@
 defmodule SwitchWeb.FeatureTogglesController do
   use SwitchWeb, :controller
 
-  alias SwitchWeb.{FeatureTogglesRepository, ErrorHelpers}
-  alias Switch.{UsersCache, SwitchesCache, FeatureTogglesCache}
+  alias SwitchWeb.{FeatureTogglesRepository, ErrorHelpers, FeatureTogglesCachedRepository}
 
   def index(%{assigns: %{version: :v1}} = conn, _params) do
     feature_toggles = FeatureTogglesRepository.list()
-
-    IO.inspect(UsersCache.lookup(:spam))
 
     conn
     |> put_status(:ok)
@@ -15,7 +12,7 @@ defmodule SwitchWeb.FeatureTogglesController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(id: params["id"])
+    feature_toggle = FeatureTogglesCachedRepository.get(id: params["id"])
 
     unless feature_toggle == nil do
       conn |> put_status(:ok) |> json(feature_toggle)

@@ -1,10 +1,14 @@
 defmodule SwitchWeb.FeatureToggleRulesController do
   use SwitchWeb, :controller
 
-  alias SwitchWeb.{FeatureTogglesRepository, FeatureToggleRulesRepository}
+  alias SwitchWeb.{
+    FeatureTogglesRepository,
+    FeatureToggleRulesRepository,
+    FeatureTogglesCachedRepository
+  }
 
   def index(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesCachedRepository.get(id: params["feature_toggles_id"])
 
     case feature_toggle do
       nil -> conn |> put_status(:ok) |> json([])
@@ -13,7 +17,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   end
 
   def show(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesCachedRepository.get(id: params["feature_toggles_id"])
     feature_toggle_rule = FeatureToggleRulesRepository.get(id: params["id"])
 
     case {feature_toggle, feature_toggle_rule} do
@@ -29,7 +33,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
              feature_toggle_id: params["feature_toggles_id"],
              feature_toggle_rule_id: params["id"]
            ) do
-      feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
+      feature_toggle = FeatureTogglesCachedRepository.get(id: params["feature_toggles_id"])
 
       conn |> put_status(:ok) |> json(feature_toggle.feature_toggle_rules)
     else
@@ -38,7 +42,7 @@ defmodule SwitchWeb.FeatureToggleRulesController do
   end
 
   def create(%{assigns: %{version: :v1}} = conn, params) do
-    feature_toggle = FeatureTogglesRepository.get(id: params["feature_toggles_id"])
+    feature_toggle = FeatureTogglesCachedRepository.get(id: params["feature_toggles_id"])
 
     unless feature_toggle == nil do
       {:ok, rule} =
