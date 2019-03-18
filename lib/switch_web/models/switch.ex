@@ -16,6 +16,7 @@ defmodule SwitchWeb.Switch do
     struct
     |> cast(attrs, [:feature_toggle_id, :user_id, :user_source, :value])
     |> validate_required([:feature_toggle_id])
+    |> foreign_key_constraint(:feature_toggle_id)
   end
 
   defimpl Poison.Encoder, for: Switch do
