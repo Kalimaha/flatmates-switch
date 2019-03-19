@@ -19,6 +19,10 @@ defmodule Switch.Cache do
         GenServer.call(__MODULE__, {:delete, key})
       end
 
+      def delete_all() do
+        GenServer.call(__MODULE__, {:delete_all})
+      end
+
       def handle_call({:lookup, key}, _from, state) do
         %{ets_table_name: ets_table_name} = state
         cache_value = :ets.lookup(ets_table_name, key)
@@ -38,6 +42,12 @@ defmodule Switch.Cache do
       def handle_call({:delete, key}, _from, state) do
         %{ets_table_name: ets_table_name} = state
         :ets.delete(ets_table_name, key)
+        {:reply, :ok, state}
+      end
+
+      def handle_call({:delete_all}, _from, state) do
+        %{ets_table_name: ets_table_name} = state
+        :ets.delete_all_objects(ets_table_name)
         {:reply, :ok, state}
       end
 

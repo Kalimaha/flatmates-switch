@@ -1,8 +1,14 @@
 defmodule SwitchWeb.SwitchesControllerTest do
   use SwitchWeb.ConnCase
+
   import Switch.Factory
 
+  alias Switch.FeatureTogglesCache
   alias SwitchWeb.{UsersRepository, SwitchesRepository}
+
+  setup do
+    FeatureTogglesCache.delete_all()
+  end
 
   test "multiple switches", %{conn: conn} do
     user = insert(:user)
