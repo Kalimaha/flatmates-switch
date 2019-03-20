@@ -3,10 +3,11 @@ defmodule SwitchWeb.SwitchesControllerTest do
 
   import Switch.Factory
 
-  alias Switch.FeatureTogglesCache
+  alias Switch.{FeatureTogglesCache, SwitchesCache}
   alias SwitchWeb.{UsersRepository, SwitchesRepository}
 
   setup do
+    SwitchesCache.delete_all()
     FeatureTogglesCache.delete_all()
   end
 

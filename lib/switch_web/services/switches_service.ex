@@ -1,6 +1,7 @@
 defmodule SwitchWeb.SwitchesService do
   alias SwitchWeb.{
     SwitchesRepository,
+    SwitchesCachedRepository,
     UsersRepository,
     UsersCachedRepository,
     FeatureTogglesRepository,
@@ -80,7 +81,7 @@ defmodule SwitchWeb.SwitchesService do
 
   defp get_or_create_switch(feature_toggle: feature_toggle) do
     existing_switch =
-      SwitchesRepository.get(
+      SwitchesCachedRepository.get(
         feature_toggle_name: feature_toggle.external_id,
         feature_toggle_env: feature_toggle.env
       )
@@ -96,7 +97,7 @@ defmodule SwitchWeb.SwitchesService do
 
   defp get_or_create_switch(user: user, feature_toggle: feature_toggle) do
     existing_switch =
-      SwitchesRepository.get(
+      SwitchesCachedRepository.get(
         user_external_id: user.external_id,
         user_source: user.source,
         feature_toggle_name: feature_toggle.external_id,
