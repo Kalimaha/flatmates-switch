@@ -1,9 +1,9 @@
 defmodule SwitchWeb.SwitchesCachedRepository do
   alias Switch.SwitchesCache
-  alias SwitchWeb.SwitchesRepository
+  alias SwitchWeb.{SwitchesRepository, CacheHelper}
 
   def get(id: id) do
-    cached_switch = atomize(id) |> SwitchesCache.lookup()
+    cached_switch = CacheHelper.atomize(id) |> SwitchesCache.lookup()
 
     case cached_switch do
       nil -> cache_and_return(id)
@@ -19,7 +19,7 @@ defmodule SwitchWeb.SwitchesCachedRepository do
       ) do
     cached_switch =
       cache_key(user_external_id, user_source, feature_toggle_name, feature_toggle_env)
-      |> atomize()
+      |> CacheHelper.atomize()
       |> SwitchesCache.lookup()
 
     case cached_switch do
@@ -33,7 +33,9 @@ defmodule SwitchWeb.SwitchesCachedRepository do
 
   def get(feature_toggle_name: feature_toggle_name, feature_toggle_env: feature_toggle_env) do
     cached_switch =
-      cache_key(feature_toggle_name, feature_toggle_env) |> atomize() |> SwitchesCache.lookup()
+      cache_key(feature_toggle_name, feature_toggle_env)
+      |> CacheHelper.atomize()
+      |> SwitchesCache.lookup()
 
     case cached_switch do
       nil -> cache_and_return(feature_toggle_name, feature_toggle_env)
@@ -49,13 +51,6 @@ defmodule SwitchWeb.SwitchesCachedRepository do
     "#{feature_toggle_name}_#{feature_toggle_env}"
   end
 
-  defp atomize(id) do
-    cond do
-      Kernel.is_bitstring(id) -> String.to_atom(id)
-      Kernel.is_integer(id) -> String.to_atom(Integer.to_string(id))
-    end
-  end
-
   defp cache_and_return(id) do
     db_switch = SwitchesRepository.get(id: id)
 
@@ -64,7 +59,7 @@ defmodule SwitchWeb.SwitchesCachedRepository do
         nil
 
       _ ->
-        spawn(fn -> atomize(db_switch.id) |> SwitchesCache.insert(db_switch) end)
+        spawn(fn -> CacheHelper.atomize(db_switch.id) |> SwitchesCache.insert(db_switch) end)
         db_switch
     end
   end
@@ -85,7 +80,7 @@ defmodule SwitchWeb.SwitchesCachedRepository do
       _ ->
         spawn(fn ->
           cache_key(user_external_id, user_source, feature_toggle_name, feature_toggle_env)
-          |> atomize()
+          |> CacheHelper.atomize()
           |> SwitchesCache.insert(db_switch)
         end)
 
@@ -107,7 +102,7 @@ defmodule SwitchWeb.SwitchesCachedRepository do
       _ ->
         spawn(fn ->
           cache_key(feature_toggle_name, feature_toggle_env)
-          |> atomize()
+          |> CacheHelper.atomize()
           |> SwitchesCache.insert(db_switch)
         end)
 
