@@ -2,7 +2,7 @@ defmodule SwitchWeb.SwitchesRepository do
   import Ecto.Query
 
   alias Switch.Repo
-  alias SwitchWeb.{Switch, FeatureToggle}
+  alias SwitchWeb.{Switch, FeatureToggle, CacheHelper}
 
   def save(switch: switch) do
     Switch.changeset(%Switch{}, switch)
@@ -14,8 +14,11 @@ defmodule SwitchWeb.SwitchesRepository do
   end
 
   def delete(id: id) do
-    get(id: id)
-    |> Repo.delete()
+    {:ok, switch} = get(id: id) |> Repo.delete()
+
+    CacheHelper.clear_cache(switch: switch)
+
+    switch
   end
 
   def get(id: id) do
@@ -55,9 +58,10 @@ defmodule SwitchWeb.SwitchesRepository do
   end
 
   def update(id: id, new_params: new_params) do
-    record = get(id: id)
+    {:ok, switch} = get(id: id) |> Switch.changeset(new_params) |> Repo.update()
 
-    Switch.changeset(record, new_params)
-    |> Repo.update()
+    CacheHelper.clear_cache(switch: switch)
+
+    switch
   end
 end

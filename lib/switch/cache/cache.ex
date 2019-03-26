@@ -42,6 +42,7 @@ defmodule Switch.Cache do
       def handle_call({:delete, key}, _from, state) do
         %{ets_table_name: ets_table_name} = state
         :ets.delete(ets_table_name, key)
+
         {:reply, :ok, state}
       end
 
