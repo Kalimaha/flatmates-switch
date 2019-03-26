@@ -26,7 +26,11 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
 
   test "returns rules associated with a feature toggle", %{conn: conn} do
     feature_toggle = insert(:feature_toggle)
-    FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+
+    FeatureTogglesRepository.add_rule(
+      feature_toggle_id: feature_toggle.id,
+      feature_toggle_rule_params: params_for(:feature_toggle_rule)
+    )
 
     response =
       conn
@@ -49,7 +53,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+      FeatureTogglesRepository.add_rule(
+        feature_toggle_id: feature_toggle.id,
+        feature_toggle_rule_params: params_for(:feature_toggle_rule)
+      )
 
     response =
       conn
@@ -85,7 +92,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+      FeatureTogglesRepository.add_rule(
+        feature_toggle_id: feature_toggle.id,
+        feature_toggle_rule_params: params_for(:feature_toggle_rule)
+      )
 
     response =
       conn
@@ -117,10 +127,12 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureToggleRulesRepository.save(%{
-        :feature_toggle_id => feature_toggle.id,
-        :type => "simple"
-      })
+      FeatureToggleRulesRepository.save(
+        feature_toggle_rule: %{
+          :feature_toggle_id => feature_toggle.id,
+          :type => "simple"
+        }
+      )
 
     response =
       conn
@@ -164,7 +176,10 @@ defmodule SwitchWeb.FeatureToggleRulesControllerTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+      FeatureTogglesRepository.add_rule(
+        feature_toggle_id: feature_toggle.id,
+        feature_toggle_rule_params: params_for(:feature_toggle_rule)
+      )
 
     new_rule = %{:threshold => 0.84}
 

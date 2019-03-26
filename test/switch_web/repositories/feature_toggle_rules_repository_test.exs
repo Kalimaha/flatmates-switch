@@ -9,9 +9,12 @@ defmodule SwitchWeb.FeatureToggleRulesRepositoryTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, rule} =
-      FeatureTogglesRepository.add_rule(feature_toggle.id, params_for(:feature_toggle_rule))
+      FeatureTogglesRepository.add_rule(
+        feature_toggle_id: feature_toggle.id,
+        feature_toggle_rule_params: params_for(:feature_toggle_rule)
+      )
 
-    assert FeatureToggleRulesRepository.get(rule.id).type == "simple"
+    assert FeatureToggleRulesRepository.get(id: rule.id).type == "simple"
   end
 
   test "save new content in the DB" do

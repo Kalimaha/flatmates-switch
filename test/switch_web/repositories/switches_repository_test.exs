@@ -7,7 +7,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
 
   test "save new content in the DB" do
     feature_toggle = insert(:feature_toggle)
-    SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+    SwitchesRepository.save(switch: params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     assert length(Repo.all(Switch)) == 1
   end
@@ -16,7 +16,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, switch_record} =
-      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+      SwitchesRepository.save(switch: params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     refute switch_record.id == nil
   end
@@ -27,7 +27,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
 
   test "returns all the available records in the DB" do
     feature_toggle = insert(:feature_toggle)
-    SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+    SwitchesRepository.save(switch: params_for(:switch, feature_toggle_id: feature_toggle.id))
 
     assert length(SwitchesRepository.list()) == 1
   end
@@ -36,20 +36,20 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, switch} =
-      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+      SwitchesRepository.save(switch: params_for(:switch, feature_toggle_id: feature_toggle.id))
 
-    SwitchesRepository.update(switch.id, %{:value => false})
+    SwitchesRepository.update(id: switch.id, new_params: %{:value => false})
 
-    assert SwitchesRepository.get(switch.id).value == false
+    assert SwitchesRepository.get(id: switch.id).value == false
   end
 
   test "deletes an existing record in the DB" do
     feature_toggle = insert(:feature_toggle)
 
     {:ok, switch} =
-      SwitchesRepository.save(params_for(:switch, feature_toggle_id: feature_toggle.id))
+      SwitchesRepository.save(switch: params_for(:switch, feature_toggle_id: feature_toggle.id))
 
-    SwitchesRepository.delete(switch.id)
+    SwitchesRepository.delete(id: switch.id)
 
     assert length(SwitchesRepository.list()) == 0
   end
@@ -58,7 +58,7 @@ defmodule SwitchWeb.SwitchesRepositoryTest do
     feature_toggle = insert(:feature_toggle)
     switch = insert(:switch, feature_toggle_id: feature_toggle.id)
 
-    switch_feature_toggle = SwitchesRepository.get(switch.id).feature_toggle
+    switch_feature_toggle = SwitchesRepository.get(id: switch.id).feature_toggle
 
     assert switch_feature_toggle.env == feature_toggle.env
     assert switch_feature_toggle.external_id == feature_toggle.external_id

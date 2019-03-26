@@ -21,9 +21,9 @@ defmodule SwitchWeb.Seeder do
     user_2 = %{:external_id => "cazio", :source => "flatmates"}
     user_3 = %{:external_id => "sempronio", :source => "flatmates"}
 
-    UsersRepository.save(user_1)
-    UsersRepository.save(user_2)
-    UsersRepository.save(user_3)
+    UsersRepository.save(user: user_1)
+    UsersRepository.save(user: user_2)
+    UsersRepository.save(user: user_3)
 
     feature_toggle_1 = %{:external_id => "toggle_1", :active => true, :env => "dev", :type => "simple", :label => "Toggle 1"}
     feature_toggle_2 = %{:external_id => "toggle_1", :active => false, :env => "prod", :type => "simple", :label => "Toggle 1"}

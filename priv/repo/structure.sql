@@ -2,7 +2,7 @@
 -- PostgreSQL database dump
 --
 
--- Dumped from database version 9.6.11
+-- Dumped from database version 9.6.12
 -- Dumped by pg_dump version 10.5
 
 SET statement_timeout = 0;
@@ -250,6 +250,13 @@ ALTER TABLE ONLY public.users
 
 
 --
+-- Name: index_external_id_env; Type: INDEX; Schema: public; Owner: -
+--
+
+CREATE UNIQUE INDEX index_external_id_env ON public.feature_toggles USING btree (external_id, env);
+
+
+--
 -- Name: feature_toggle_rules feature_toggle_rules_feature_toggle_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: -
 --
 
@@ -269,5 +276,5 @@ ALTER TABLE ONLY public.switches
 -- PostgreSQL database dump complete
 --
 
-INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115031452), (20181115222609), (20181117040000), (20181124040133), (20181125021220);
+INSERT INTO public."schema_migrations" (version) VALUES (20181030055927), (20181113215946), (20181113223921), (20181114022129), (20181115020724), (20181115031452), (20181115222609), (20181117040000), (20181124040133), (20181125021220), (20190222033600);
 

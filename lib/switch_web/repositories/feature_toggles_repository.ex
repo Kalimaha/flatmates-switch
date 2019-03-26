@@ -2,9 +2,9 @@ defmodule SwitchWeb.FeatureTogglesRepository do
   import Ecto.Query
 
   alias Switch.Repo
-  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureToggleRulesRepository}
+  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureToggleRulesRepository, CacheHelper}
 
-  def save(feature_toggle) do
+  def save(feature_toggle: feature_toggle) do
     FeatureToggle.changeset(%FeatureToggle{}, feature_toggle)
     |> Repo.insert()
   end
@@ -14,25 +14,41 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     |> Repo.preload(:feature_toggle_rules)
   end
 
-  def delete(id) do
-    get(id)
-    |> Repo.delete()
+  def delete(id: id) do
+    {:ok, feature_toggle} = get(id: id) |> Repo.delete()
+
+    CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+    {:ok, feature_toggle}
   end
 
-  def get(id) do
+  def get(id: id) do
     Repo.get(FeatureToggle, id)
     |> Repo.preload(:feature_toggle_rules)
   end
 
-  def update(id, new_params) do
-    record = get(id)
-
-    FeatureToggle.changeset(record, new_params)
-    |> Repo.update()
+  def get(external_id: external_id, env: env) do
+    from(
+      f in FeatureToggle,
+      where: f.external_id == ^external_id and f.env == ^env
+    )
+    |> Repo.one()
+    |> Repo.preload(:feature_toggle_rules)
   end
 
-  def add_rule(feature_toggle_id, feature_toggle_rule_params) do
-    feature_toggle = get(feature_toggle_id)
+  def update(id: id, new_params: new_params) do
+    {:ok, feature_toggle} = get(id: id) |> FeatureToggle.changeset(new_params) |> Repo.update()
+
+    CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+    {:ok, feature_toggle}
+  end
+
+  def add_rule(
+        feature_toggle_id: feature_toggle_id,
+        feature_toggle_rule_params: feature_toggle_rule_params
+      ) do
+    feature_toggle = get(id: feature_toggle_id)
 
     unless feature_toggle == nil do
       feature_toggle
@@ -43,11 +59,15 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     end
   end
 
-  def update_rule(feature_toggle_id, feature_toggle_rule_id, feature_toggle_rule_params) do
-    feature_toggle = get(feature_toggle_id)
+  def update_rule(
+        feature_toggle_id: feature_toggle_id,
+        feature_toggle_rule_id: feature_toggle_rule_id,
+        feature_toggle_rule_params: feature_toggle_rule_params
+      ) do
+    feature_toggle = get(id: feature_toggle_id)
 
     unless feature_toggle == nil do
-      feature_toggle_rule = FeatureToggleRulesRepository.get(feature_toggle_rule_id)
+      feature_toggle_rule = FeatureToggleRulesRepository.get(id: feature_toggle_rule_id)
 
       unless feature_toggle_rule == nil do
         feature_toggle_rule
@@ -61,11 +81,14 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     end
   end
 
-  def remove_rule(feature_toggle_id, feature_toggle_rule_id) do
-    feature_toggle = get(feature_toggle_id)
+  def remove_rule(
+        feature_toggle_id: feature_toggle_id,
+        feature_toggle_rule_id: feature_toggle_rule_id
+      ) do
+    feature_toggle = get(id: feature_toggle_id)
 
     unless feature_toggle == nil do
-      feature_toggle_rule = FeatureToggleRulesRepository.get(feature_toggle_rule_id)
+      feature_toggle_rule = FeatureToggleRulesRepository.get(id: feature_toggle_rule_id)
 
       unless feature_toggle_rule == nil do
         feature_toggle_rule
@@ -76,14 +99,5 @@ defmodule SwitchWeb.FeatureTogglesRepository do
     else
       {:error, "Feature toggle with ID #{feature_toggle_id} not found."}
     end
-  end
-
-  def find_by_external_id_and_env(external_id, env) do
-    from(
-      f in FeatureToggle,
-      where: f.external_id == ^external_id and f.env == ^env
-    )
-    |> Repo.one()
-    |> Repo.preload(:feature_toggle_rules)
   end
 end

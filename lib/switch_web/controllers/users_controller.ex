@@ -21,7 +21,7 @@ defmodule SwitchWeb.UsersController do
   end
 
   def create(%{assigns: %{version: :v1}} = conn, params) do
-    {:ok, user} = UsersRepository.save(params)
+    {:ok, user} = UsersRepository.save(user: params)
 
     conn
     |> put_status(:created)
@@ -29,7 +29,7 @@ defmodule SwitchWeb.UsersController do
   end
 
   def delete(%{assigns: %{version: :v1}} = conn, params) do
-    UsersRepository.delete(params["id"])
+    UsersRepository.delete(id: params["id"])
 
     conn
     |> put_status(:ok)
@@ -37,7 +37,7 @@ defmodule SwitchWeb.UsersController do
   end
 
   def update(%{assigns: %{version: :v1}} = conn, params) do
-    {:ok, user} = UsersRepository.update(params["id"], params)
+    {:ok, user} = UsersRepository.update(id: params["id"], new_params: params)
 
     conn
     |> put_status(:ok)

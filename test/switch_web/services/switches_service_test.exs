@@ -4,9 +4,12 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
   import Switch.Factory
 
-  alias SwitchWeb.{SwitchesService, SwitchesRepository}
+  alias Switch.{FeatureTogglesCache, SwitchesCache}
+  alias SwitchWeb.{SwitchesService, SwitchesRepository, FeatureTogglesRepository}
 
   setup do
+    SwitchesCache.delete_all()
+    FeatureTogglesCache.delete_all()
     {:ok, user: insert(:user)}
   end
 
@@ -16,20 +19,21 @@ defmodule SwitchWeb.SwitchesServiceTest do
                      feature_toggle = insert(:feature_toggle, active: feature_toggle_value)
 
                      SwitchesRepository.save(
-                       params_for(:switch,
-                         value: switch_value,
-                         user_id: user.external_id,
-                         user_source: user.source,
-                         feature_toggle_id: feature_toggle.id
-                       )
+                       switch:
+                         params_for(:switch,
+                           value: switch_value,
+                           user_id: user.external_id,
+                           user_source: user.source,
+                           feature_toggle_id: feature_toggle.id
+                         )
                      )
 
                      {:ok, switch} =
                        SwitchesService.get_or_create(
-                         user.external_id,
-                         user.source,
-                         feature_toggle.external_id,
-                         feature_toggle.env
+                         user_external_id: user.external_id,
+                         user_source: user.source,
+                         feature_toggle_name: feature_toggle.external_id,
+                         feature_toggle_env: feature_toggle.env
                        )
 
                      assert switch.value == expected
@@ -42,33 +46,46 @@ defmodule SwitchWeb.SwitchesServiceTest do
     ]
   end
 
-  test "creates a new switch based on a 'simple' feature toggle with the value set to false", %{
-    user: user
-  } do
+  test_with_params "fails to create a switch without a user for 'attributes_based' or 'attributes_based_godsend' feature toggles",
+                   fn type, expected ->
+                     feature_toggle = insert(:feature_toggle, active: true, type: type)
+
+                     {:error, message} =
+                       SwitchesService.get_or_create(
+                         feature_toggle_name: feature_toggle.external_id,
+                         feature_toggle_env: feature_toggle.env
+                       )
+
+                     assert message == expected
+                   end do
+    [
+      attributes_based:
+        {"attributes_based", "A user is required for 'attributes_based' feature toggles."},
+      attributes_based_godsend:
+        {"attributes_based_godsend",
+         "A user is required for 'attributes_based_godsend' feature toggles."}
+    ]
+  end
+
+  test "creates a new switch based on a 'simple' feature toggle with the value set to false" do
     feature_toggle = insert(:feature_toggle, active: true)
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == true
   end
 
-  test "creates a new switch based on a 'simple' feature toggle with the value set to true", %{
-    user: user
-  } do
+  test "creates a new switch based on a 'simple' feature toggle with the value set to true" do
     feature_toggle = insert(:feature_toggle, active: false)
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == false
@@ -82,10 +99,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == false
@@ -99,10 +116,10 @@ defmodule SwitchWeb.SwitchesServiceTest do
 
     {:ok, switch} =
       SwitchesService.get_or_create(
-        user.external_id,
-        user.source,
-        feature_toggle.external_id,
-        feature_toggle.env
+        user_external_id: user.external_id,
+        user_source: user.source,
+        feature_toggle_name: feature_toggle.external_id,
+        feature_toggle_env: feature_toggle.env
       )
 
     assert switch.value == true

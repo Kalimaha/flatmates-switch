@@ -1,9 +1,9 @@
 defmodule SwitchWeb.UsersCachedRepository do
   alias Switch.UsersCache
-  alias SwitchWeb.UsersRepository
+  alias SwitchWeb.{UsersRepository, CacheHelper}
 
   def get(id: id) do
-    cached_user = atomize(id) |> UsersCache.lookup()
+    cached_user = CacheHelper.atomize(id) |> UsersCache.lookup()
 
     case cached_user do
       nil -> cache_and_return(id)
@@ -12,18 +12,12 @@ defmodule SwitchWeb.UsersCachedRepository do
   end
 
   def get(external_id: external_id, user_source: user_source) do
-    cached_user = cache_key(external_id, user_source) |> atomize() |> UsersCache.lookup()
+    cached_user =
+      cache_key(external_id, user_source) |> CacheHelper.atomize() |> UsersCache.lookup()
 
     case cached_user do
       nil -> cache_and_return(external_id, user_source)
       _ -> cached_user
-    end
-  end
-
-  defp atomize(id) do
-    cond do
-      Kernel.is_bitstring(id) -> String.to_atom(id)
-      Kernel.is_integer(id) -> String.to_atom(Integer.to_string(id))
     end
   end
 
@@ -39,7 +33,7 @@ defmodule SwitchWeb.UsersCachedRepository do
         nil
 
       _ ->
-        spawn(fn -> atomize(db_user.id) |> UsersCache.insert(db_user) end)
+        spawn(fn -> CacheHelper.atomize(db_user.id) |> UsersCache.insert(db_user) end)
         db_user
     end
   end
@@ -53,7 +47,9 @@ defmodule SwitchWeb.UsersCachedRepository do
 
       _ ->
         spawn(fn ->
-          cache_key(external_id, user_source) |> atomize() |> UsersCache.insert(db_user)
+          cache_key(external_id, user_source)
+          |> CacheHelper.atomize()
+          |> UsersCache.insert(db_user)
         end)
 
         db_user

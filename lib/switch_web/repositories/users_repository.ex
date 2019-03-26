@@ -2,9 +2,9 @@ defmodule SwitchWeb.UsersRepository do
   import Ecto.Query
 
   alias Switch.Repo
-  alias SwitchWeb.User
+  alias SwitchWeb.{User, CacheHelper}
 
-  def save(user) do
+  def save(user: user) do
     User.changeset(%User{}, user)
     |> Repo.insert()
   end
@@ -13,16 +13,20 @@ defmodule SwitchWeb.UsersRepository do
     Repo.all(User)
   end
 
-  def delete(id) do
-    get(id: id)
-    |> Repo.delete()
+  def delete(id: id) do
+    {:ok, user} = get(id: id) |> Repo.delete()
+
+    CacheHelper.clear_cache(user: user)
+
+    {:ok, user}
   end
 
-  def update(id, new_params) do
-    record = get(id: id)
+  def update(id: id, new_params: new_params) do
+    {:ok, user} = get(id: id) |> User.changeset(new_params) |> Repo.update()
 
-    User.changeset(record, new_params)
-    |> Repo.update()
+    CacheHelper.clear_cache(user: user)
+
+    {:ok, user}
   end
 
   def get(id: id) do

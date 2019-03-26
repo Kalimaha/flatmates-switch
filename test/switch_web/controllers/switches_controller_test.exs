@@ -1,8 +1,15 @@
 defmodule SwitchWeb.SwitchesControllerTest do
   use SwitchWeb.ConnCase
+
   import Switch.Factory
 
+  alias Switch.{FeatureTogglesCache, SwitchesCache}
   alias SwitchWeb.{UsersRepository, SwitchesRepository}
+
+  setup do
+    SwitchesCache.delete_all()
+    FeatureTogglesCache.delete_all()
+  end
 
   test "multiple switches", %{conn: conn} do
     user = insert(:user)
@@ -202,5 +209,36 @@ defmodule SwitchWeb.SwitchesControllerTest do
       |> json_response(:bad_request)
 
     assert response == "bad_request"
+  end
+
+  test "creates a simple switch without an user if it does not exist in the DB already", %{
+    conn: conn
+  } do
+    feature_toggle = insert(:feature_toggle, active: true)
+
+    payload = %{
+      :feature_toggle_name => feature_toggle.external_id,
+      :feature_toggle_env => feature_toggle.env
+    }
+
+    response =
+      conn
+      |> get(switches_path(conn, :get_or_create), payload)
+      |> json_response(:ok)
+
+    assert length(UsersRepository.list()) == 0
+    assert length(SwitchesRepository.list()) == 1
+
+    assert response == %{
+             "user_source" => nil,
+             "value" => true,
+             "env" => "dev",
+             "id" => "spam",
+             "label" => "Spam",
+             "payload" => %{},
+             "rules" => [],
+             "type" => "simple",
+             "user_id" => nil
+           }
   end
 end

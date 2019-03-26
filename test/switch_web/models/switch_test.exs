@@ -8,6 +8,6 @@ defmodule SwitchWeb.SwitchTest do
   end
 
   test "changeset with valid attributes" do
-    assert Switch.changeset(%Switch{:user_id => 42, :feature_toggle_id => 23}, %{}).valid?
+    assert Switch.changeset(%Switch{:feature_toggle_id => 23}, %{}).valid?
   end
 end
