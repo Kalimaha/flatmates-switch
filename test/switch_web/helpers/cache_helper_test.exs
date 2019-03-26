@@ -4,7 +4,7 @@ defmodule SwitchWeb.CacheHelperTest do
   import Mock
   import Switch.Factory
 
-  alias Switch.{UsersCache, SwitchesCache}
+  alias Switch.{UsersCache, SwitchesCache, FeatureTogglesCache}
   alias SwitchWeb.CacheHelper
 
   test "clear user cache by id" do
@@ -66,6 +66,28 @@ defmodule SwitchWeb.CacheHelperTest do
           CacheHelper.atomize(
             "eggs_bacon_#{switch.feature_toggle.external_id}_#{switch.feature_toggle.env}"
           )
+        )
+      )
+    end
+  end
+
+  test "clear feature toggle cache by id" do
+    with_mock FeatureTogglesCache, delete: fn _ -> nil end do
+      feature_toggle = insert(:feature_toggle)
+      CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+      assert_called(FeatureTogglesCache.delete(CacheHelper.atomize(feature_toggle.id)))
+    end
+  end
+
+  test "clear feature toggle cache by external id and env" do
+    with_mock FeatureTogglesCache, delete: fn _ -> nil end do
+      feature_toggle = insert(:feature_toggle)
+      CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+      assert_called(
+        FeatureTogglesCache.delete(
+          CacheHelper.atomize("#{feature_toggle.external_id}_#{feature_toggle.env}")
         )
       )
     end

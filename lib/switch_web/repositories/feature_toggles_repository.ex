@@ -2,7 +2,7 @@ defmodule SwitchWeb.FeatureTogglesRepository do
   import Ecto.Query
 
   alias Switch.Repo
-  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureToggleRulesRepository}
+  alias SwitchWeb.{FeatureToggle, FeatureToggleRule, FeatureToggleRulesRepository, CacheHelper}
 
   def save(feature_toggle: feature_toggle) do
     FeatureToggle.changeset(%FeatureToggle{}, feature_toggle)
@@ -15,8 +15,11 @@ defmodule SwitchWeb.FeatureTogglesRepository do
   end
 
   def delete(id: id) do
-    get(id: id)
-    |> Repo.delete()
+    {:ok, feature_toggle} = get(id: id) |> Repo.delete()
+
+    CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+    {:ok, feature_toggle}
   end
 
   def get(id: id) do
@@ -34,10 +37,11 @@ defmodule SwitchWeb.FeatureTogglesRepository do
   end
 
   def update(id: id, new_params: new_params) do
-    record = get(id: id)
+    {:ok, feature_toggle} = get(id: id) |> FeatureToggle.changeset(new_params) |> Repo.update()
 
-    FeatureToggle.changeset(record, new_params)
-    |> Repo.update()
+    CacheHelper.clear_cache(feature_toggle: feature_toggle)
+
+    {:ok, feature_toggle}
   end
 
   def add_rule(

@@ -1,5 +1,5 @@
 defmodule SwitchWeb.CacheHelper do
-  alias Switch.{UsersCache, SwitchesCache}
+  alias Switch.{UsersCache, SwitchesCache, FeatureTogglesCache}
 
   def clear_cache(user: user) do
     case user.id do
@@ -42,6 +42,23 @@ defmodule SwitchWeb.CacheHelper do
       end
     rescue
       e in KeyError -> e
+    end
+  end
+
+  def clear_cache(feature_toggle: feature_toggle) do
+    case feature_toggle.id do
+      nil -> nil
+      _ -> feature_toggle.id |> atomize() |> FeatureTogglesCache.delete()
+    end
+
+    case {feature_toggle.external_id, feature_toggle.env} do
+      {nil, nil} ->
+        nil
+
+      {_, _} ->
+        "#{feature_toggle.external_id}_#{feature_toggle.env}"
+        |> atomize()
+        |> FeatureTogglesCache.delete()
     end
   end
 
